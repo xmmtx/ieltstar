@@ -33,27 +33,30 @@ const myApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [theme, colorMode] = useMode();
   const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
+  const skipAuth = (Component as any).skipAuth;
+
+  const content = (
+    <Provider store={store}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <ColorModeContext.Provider value={colorMode}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline enableColorScheme />
+            <Snackbar />
+            {getLayout(<Component {...pageProps} />)}
+          </ThemeProvider>
+        </ColorModeContext.Provider>
+      </CacheProvider>
+    </Provider>
+  );
+
+  if (skipAuth) return content;
 
   return (
     <Provider store={store}>
-      <UserProvider>
-        <CacheProvider value={emotionCache}>
-          <Head>
-            <meta
-              name="viewport"
-              content="initial-scale=1, width=device-width"
-            />
-          </Head>
-          <ColorModeContext.Provider value={colorMode}>
-            <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline enableColorScheme />
-              <Snackbar />
-              {getLayout(<Component {...pageProps} />)}
-            </ThemeProvider>
-          </ColorModeContext.Provider>
-        </CacheProvider>
-      </UserProvider>
+      <UserProvider>{content}</UserProvider>
     </Provider>
   );
 };

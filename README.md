@@ -1,98 +1,103 @@
-# IELTSTAR - IELTS Online Test Platform
-## Project Description
-IELTSTAR is an online IELTS test platform. The platform provides multiple mock tests to help users improve their listening, reading, writing, and speaking IELTS exam performance. IELTSTAR can predict the user's overall IELTS band score with a score calculator. It consists of an AI-based speaking assessment to help users improve Fluency & Coherence, Lexical Resources, Grammatical range and accuracy, and Pronunciation. It lets users post their scores on social media platforms like Facebook, Twitter, and Whatsapp and send scores via SMS and Email. IELTSTAR have an interactive dashboard for registered users to help track their progress and view past test mock exams.
+# IELTSTAR — IELTS Computer-Based Mock Test Platform
 
-## User Requirements
-#### Admin Users
-- Admin can log in to the platform using the admin credentials
-- Admin can CRUD questions
-- Admin can CRUD moderators
-- Admin can CRUD user profiles
+A full-stack IELTS Academic mock test platform for **Listening, Reading, and Writing**, designed to simulate the official British Council computer-delivered IELTS experience. Built for **金华米德尔顿学校 (Jinhua Middleton School)**.
 
-#### Moderators
-- Moderator can log in to the platform using the moderator credentials
-- Moderator can CRUD questions
-- Moderator can update user profile
+## Features
 
-#### Registered Users (Students)
-- Users can log in using their credentials to enter the platform 
-- Users can take the IELTS test 
-- Registered users can view previous test histories 
-- User can view the scores immediately after completing the test 
-- Users have access to the dashboard to view their progress
-- Users can send scores to different social platforms  
-- Users can send scores via email or SMS
-- Users will be able to view browser notifications for new questions and promotional activities
-- Users can sign up for additional rewards (study material via email)
+- 🎧 **Listening** — Single-column question layout with audio player
+- 📖 **Reading** — Left passage / right questions split with **text highlighter**
+- ✍️ **Writing** — Left task / right writing area with **live word count** (Task 1 & 2)
+- ⏱️ **Per-section timer** — Independent timers for each section (30/60 min)
+- ✅ **Auto-scoring** — Listening & Reading answers auto-graded with band scores
+- 🖍️ **Text highlighter** — Select to highlight, click to remove
+- 📝 **Notes panel** — Built-in notepad
+- 🧭 **Bottom navigation** — Switch between sections with answer status
 
-## Team Members
-- Amey Bansod (NUID: 002743117)
-- Harshil Shah (NUID: 002780887)
-- Keerthana Satheesh (NUID: 002747795)
-- Saloni Talwar (NUID: 002924067)
+## Tech Stack
 
-## Domain Model
-![Final domain diagram]
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 13, React 18, TypeScript, MUI v5 |
+| Backend | Node.js, Express, MongoDB (Mongoose) |
+| Auth | Auth0 (configurable) |
 
-![image](https://user-images.githubusercontent.com/113074747/206375077-633c45fb-8d01-4e03-8b3e-946b1ce1721c.png)
+## Quick Start
 
-### Installation
-#### Prerequisites
-- Node.js
-- NPM
-- MongoDB
+### Prerequisites
+- Node.js ≥18
+- MongoDB (local or Atlas)
 
-#### Steps
-- Clone the repository
-- Add a collection named `ieltstar` in MongoDB
-- Run `npm install` in ieltstar and server folder to install all the dependencies
-- Add .env.local file in ieltstar along with the following env variables:- API_URL, AUTH0_SECRET, AUTH0_BASE_URL, AUTH0_ISSUER_BASE_URL, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET and set appropriate values
-- Add .env file in server along with the following env variables:- PORT, DB_NAME, DB_URL, SENDGRID_APIKEY, FROM_EMAIL, AccountSID, AuthToken, FROM_SMS, SENDGRID_TEMPLATEID and set appropriate values
-- Run `npm start` in ieltstar and server folder to start the application, `npm run dev` in ieltstar folder to start the application in development mode
-- Go to http://localhost:3000 to view the application
-
-### Technology Stack
-- React
-- Node.js
-- Express
-- MongoDB
-- Auth0
-- SendGrid
-- Twilio
-- React Material UI
-- NextJS
-- TypeScript
-
-### Folder Structure
+### 1. Install dependencies
+```bash
+cd ieltstar && npm install --legacy-peer-deps
+cd ../server && npm install
 ```
-.
-├── ieltstar - The frontend application
-│   ├── components - All the common components
-│   ├──├── Layout - All the common layouts (admin and student layout)
-│   ├── pages - All the pages
-│   ├── public - All the static files
-│   ├──├── admin - All the admin pages
-│   ├──├── student - All the student pages
-│   ├── styles - All the styles
-│   ├── images - All the images
-│   ├── store - Redux store
-│   ├── images - All the images
-│   ├── material-ui-configs - Material UI theme configurations
-│   ├── utils - All the utility functions
-│   ├── .env.local - Environment variables
-│   ├── .gitignore - Git ignore file
-│   ├── next.config.js - NextJS configuration file
-│   ├── package.json - NPM package file
-│   ├── tsconfig.json - TypeScript configuration file
-│   └── yarn.lock - Yarn lock file
-├── server - The backend application
-│   ├── server.js - Entry point of the application
-│   ├── api - All the APIs
-│   ├──├── controllers - All the controllers
-│   ├──├── routes - All the middlewares
-│   ├──├── services - All the services
-    └──└── models - All the models
+
+### 2. Configure environment
+```bash
+# Frontend
+cp ieltstar/.env.example ieltstar/.env.local
+# Edit .env.local with your values
+
+# Backend
+cp server/.env.example server/.env
+# Edit .env with your MongoDB connection
+```
+
+### 3. Start MongoDB
+```bash
+mongod --dbpath C:\data\db
+```
+
+### 4. Seed the database
+```bash
+cd server && node seed.js
+```
+
+### 5. Start the servers
+```bash
+# Backend (port 8080)
+cd server && node server.js
+
+# Frontend (port 3000)
+cd ieltstar && npm run dev
+```
+
+### 6. Open
+- **Demo exam**: `http://localhost:3000/test-exam` (no login required)
+- **Full app**: `http://localhost:3000` (requires Auth0 setup)
+
+## Project Structure
 
 ```
+ieltstar/         # Next.js frontend
+├── components/TestComponents/ExamV2/  # New IELTS exam UI
+│   ├── ExamLayout.jsx    # Main exam layout
+│   ├── ExamTopBar.jsx    # Fixed top bar + timer
+│   ├── ReadingView.jsx   # Left passage / right questions
+│   ├── WritingView.jsx   # Left task / right textarea
+│   ├── ListeningView.jsx # Single-column questions
+│   └── BottomNav.jsx     # Section navigation
+├── pages/test-exam.jsx   # Demo page (no auth required)
+└── pages/student/exam/[id].jsx  # Real exam page
+
+server/           # Express backend
+├── api/
+│   ├── models/     # Mongoose schemas
+│   ├── controllers/
+│   ├── services/
+│   └── routes/
+└── seed.js        # Database seeder
+```
+
+## Environment Variables
+
+Copy `.env.example` to `.env.local` (frontend) and `.env` (backend). Never commit actual secrets.
+
+See `.env.example` files for the full list of required variables.
+
+## License
+
+Original project by Amey Bansod, Harshil Shah, Keerthana Satheesh, Saloni Talwar (Northeastern University). Adapted for school use.
 
 

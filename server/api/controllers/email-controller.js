@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import sgMail from "@sendgrid/mail";
 dotenv.config();
 
-sgMail.setApiKey(`${process.env.SENDGRID_APIKEY}`);
+sgMail.setApiKey(process.env.SENDGRID_APIKEY || "SG.dummy");
 // set status and send response
 const setResponse = (res, status, data) => {
   res.status(status).json(data);

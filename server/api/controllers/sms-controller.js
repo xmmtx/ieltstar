@@ -3,20 +3,31 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const accountSid = `${process.env.AccountSID}`;
-const authToken = `${process.env.AuthToken}`;
-
-const client = Twilio(accountSid, authToken);
+let client = null;
+const getTwilioClient = () => {
+  if (!client) {
+    try {
+      client = Twilio(process.env.AccountSID, process.env.AuthToken);
+    } catch (e) {
+      console.log("Twilio not configured:", e.message);
+      return null;
+    }
+  }
+  return client;
+};
 // set status and send response
 const setResponse = (res, status, data) => {
   res.status(status).json(data);
 };
 
-// get all sms
+// send SMS
 export const sendSms = (req, res) => {
+  const twilio = getTwilioClient();
+  if (!twilio) {
+    return res.json({ success: false, message: "SMS service not configured" });
+  }
   const id = JSON.stringify(req.params.id);
-  console.log(id);
-  client.messages
+  twilio.messages
     .create({
       from: `${process.env.FROM_SMS}`,
       to: id,

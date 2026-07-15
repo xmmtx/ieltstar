@@ -22,7 +22,7 @@ const Schema = new mongoose.Schema(
     },
     answer: {
       type: String,
-      required: "Correct Answer is required",
+      default: "",
     },
     marks: {
       type: Number,
