@@ -31,3 +31,5 @@ jobs:
           context: ./ieltstar
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-web:latest
+          build-args: |
+            API_URL=${{ secrets.API_URL }}
