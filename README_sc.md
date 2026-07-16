@@ -44,6 +44,45 @@ docker exec ieltstar-api node seed-roles.js
 
 打开 `http://localhost:3000` → 登录：`admin@gmail.com` / `admin123`
 
+<details>
+<summary>📄 compose.yaml 模板</summary>
+
+```yaml
+services:
+  backend:
+    image: 你的用户名/ieltstar-api:latest
+    container_name: ieltstar-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_NAME: ieltstar
+      DB_URL: mongodb://你的MongoDB地址:27017
+    networks:
+      - ieltstar
+
+  frontend:
+    image: 你的用户名/ieltstar-web:latest
+    container_name: ieltstar-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - ieltstar
+
+networks:
+  ieltstar:
+    driver: bridge
+```
+
+把 `你的用户名` 和 `你的MongoDB地址` 换成实际值。
+</details>
+
 ## Docker Hub 自动构建
 
 推送代码到 `main` 分支后，GitHub Actions 自动构建并推送镜像：

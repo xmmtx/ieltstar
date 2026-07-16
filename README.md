@@ -42,6 +42,45 @@ docker exec ieltstar-api node seed-roles.js
 
 Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
 
+<details>
+<summary>📄 compose.yaml template</summary>
+
+```yaml
+services:
+  backend:
+    image: your-dockerhub-username/ieltstar-api:latest
+    container_name: ieltstar-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_NAME: ieltstar
+      DB_URL: mongodb://your-mongo-host:27017
+    networks:
+      - ieltstar
+
+  frontend:
+    image: your-dockerhub-username/ieltstar-web:latest
+    container_name: ieltstar-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - ieltstar
+
+networks:
+  ieltstar:
+    driver: bridge
+```
+
+Replace `your-dockerhub-username` and `your-mongo-host` with your actual values.
+</details>
+
 ## Deployment via Docker Hub
 
 This repo auto-builds Docker images on push to `main` via GitHub Actions.
