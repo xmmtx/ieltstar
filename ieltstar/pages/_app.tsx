@@ -32,7 +32,7 @@ const myApp = (props: MyAppProps) => {
   useOneSignal();
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [theme, colorMode] = useMode();
-  const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
+  const getLayout = (Component as any).getLayout || ((page: any) => <Layout>{page}</Layout>);
   const skipAuth = (Component as any).skipAuth;
 
   const content = (
