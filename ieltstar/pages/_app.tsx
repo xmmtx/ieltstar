@@ -29,7 +29,10 @@ interface MyAppProps extends AppProps {
 }
 
 const myApp = (props: MyAppProps) => {
-  useOneSignal();
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useOneSignal();
+  }
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const [theme, colorMode] = useMode();
   const getLayout = (Component as any).getLayout || ((page: any) => <Layout>{page}</Layout>);
