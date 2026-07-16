@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./server
+    container_name: ieltstar-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_NAME: ieltstar
+      DB_URL: mongodb://your-mongo-host:27017
+      SENDGRID_APIKEY: your_sendgrid_key
+      FROM_EMAIL: noreply@example.com
+      AccountSID: your_twilio_sid
+      AuthToken: your_twilio_token
+      FROM_SMS: "+1234567890"
+      SENDGRID_TEMPLATEID: your_template_id
+    networks:
+      - ieltstar
+
+  frontend:
+    build: ./ieltstar
+    container_name: ieltstar-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://backend:8080
+      AUTH0_SECRET: your-auth0-secret-min-32-chars
+      AUTH0_BASE_URL: http://localhost:3000
+      AUTH0_ISSUER_BASE_URL: https://your-tenant.auth0.com
+      AUTH0_CLIENT_ID: your-auth0-client-id
+      AUTH0_CLIENT_SECRET: your-auth0-client-secret
+    depends_on:
+      - backend
+    networks:
+      - ieltstar
+
+networks:
+  ieltstar:
+    driver: bridge

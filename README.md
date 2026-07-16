@@ -23,30 +23,42 @@ A full-stack IELTS Academic mock test platform for **Listening, Reading, and Wri
 
 ## Quick Start
 
-### Prerequisites
+### Option A: Docker Compose (recommended)
+
+```bash
+# 1. Clone and configure
+cp server/.env.example server/.env
+# Edit server/.env → set DB_URL to your MongoDB
+
+# 2. Start
+docker compose up -d
+
+# 3. Seed data (first time only)
+docker exec ieltstar-api node seed.js
+docker exec ieltstar-api node seed-roles.js
+
+# 4. Open
+# Frontend: http://localhost:3000
+# Admin: admin@gmail.com / admin123
+```
+
+### Option B: Manual
+
+#### Prerequisites
 - Node.js ≥18
 - MongoDB (local or Atlas)
 
-### 1. Install dependencies
+#### 1. Install dependencies
 ```bash
 cd ieltstar && npm install --legacy-peer-deps
 cd ../server && npm install
 ```
 
-### 2. Configure environment
+#### 2. Configure environment
 ```bash
-# Frontend
 cp ieltstar/.env.example ieltstar/.env.local
-# Edit .env.local with your values
-
-# Backend
 cp server/.env.example server/.env
-# Edit .env with your MongoDB connection
-```
-
-### 3. Start MongoDB
-```bash
-mongod --dbpath C:\data\db
+# Edit files with your values
 ```
 
 ### 4. Seed the database

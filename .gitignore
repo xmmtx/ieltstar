@@ -1,2 +1,11 @@
 # Reference projects (not part of the main repo)
 reference/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker volumes
+backups/
+
