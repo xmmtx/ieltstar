@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    build: ./server
+    image: your-dockerhub-username/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -21,7 +21,7 @@ services:
       - ieltstar
 
   frontend:
-    build: ./ieltstar
+    image: your-dockerhub-username/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:

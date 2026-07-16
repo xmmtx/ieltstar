@@ -1,5 +1,7 @@
 # IELTSTAR — IELTS Computer-Based Mock Test Platform
 
+English | [中文](./README_sc.md)
+
 A full-stack IELTS Academic mock test platform for **Listening, Reading, and Writing**, designed to simulate the official British Council computer-delivered IELTS experience. Built for **金华米德尔顿学校 (Jinhua Middleton School)**.
 
 ## Features
@@ -23,61 +25,64 @@ A full-stack IELTS Academic mock test platform for **Listening, Reading, and Wri
 
 ## Quick Start
 
-### Option A: Docker Compose (recommended)
+## Quick Start — Docker
 
 ```bash
-# 1. Clone and configure
+# 1. Configure MongoDB connection
 cp server/.env.example server/.env
-# Edit server/.env → set DB_URL to your MongoDB
+# Edit server/.env → DB_URL=mongodb://your-host:27017
 
 # 2. Start
 docker compose up -d
 
-# 3. Seed data (first time only)
+# 3. Seed data
 docker exec ieltstar-api node seed.js
 docker exec ieltstar-api node seed-roles.js
-
-# 4. Open
-# Frontend: http://localhost:3000
-# Admin: admin@gmail.com / admin123
 ```
 
-### Option B: Manual
+Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
 
-#### Prerequisites
-- Node.js ≥18
-- MongoDB (local or Atlas)
+## Deployment via Docker Hub
 
-#### 1. Install dependencies
+This repo auto-builds Docker images on push to `main` via GitHub Actions.
+
+| Image | Path |
+|-------|------|
+| `yourname/ieltstar-api:latest` | Backend API |
+| `yourname/ieltstar-web:latest` | Frontend |
+
+### Setup CI/CD
+
+1. Fork this repo
+2. Go to **Settings → Secrets → Actions**, add:
+   - `DOCKERHUB_USERNAME`
+   - `DOCKERHUB_TOKEN`
+3. Push to `main` → images auto-built on [Docker Hub](https://hub.docker.com)
+
+### Server deploy
+
+```bash
+# docker-compose.yml already uses pre-built images
+docker compose up -d
+docker exec ieltstar-api node seed.js
+docker exec ieltstar-api node seed-roles.js
+```
+
+## Dev Setup (no Docker)
+
 ```bash
 cd ieltstar && npm install --legacy-peer-deps
 cd ../server && npm install
-```
-
-#### 2. Configure environment
-```bash
-cp ieltstar/.env.example ieltstar/.env.local
 cp server/.env.example server/.env
-# Edit files with your values
+cp ieltstar/.env.example ieltstar/.env.local
+# Edit .env files
+
+# Start
+cd server && node server.js          # → :8080
+cd ieltstar && npm run dev            # → :3000
 ```
 
-### 4. Seed the database
-```bash
-cd server && node seed.js
-```
-
-### 5. Start the servers
-```bash
-# Backend (port 8080)
-cd server && node server.js
-
-# Frontend (port 3000)
-cd ieltstar && npm run dev
-```
-
-### 6. Open
-- **Demo exam**: `http://localhost:3000/test-exam` (no login required)
-- **Full app**: `http://localhost:3000` (requires Auth0 setup)
+Demo: `http://localhost:3000/test-exam` (no login required)
 
 ## Project Structure
 
