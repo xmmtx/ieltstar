@@ -6,6 +6,7 @@ const nextConfig = {
   swcMinify: true,
   env: {
     API_URL: process.env.API_URL,
+    BUILD_TIME: new Date().toISOString(),
   },
   webpack: (config) => {
     const projectRoot = path.resolve(__dirname);

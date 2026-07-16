@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Tabs, Tab } from "@mui/material";
 
 const API = process.env.API_URL || "http://localhost:8080";
+const BUILD_TIME = process.env.BUILD_TIME || "dev";
 
 export default function Login() {
   const [tab, setTab] = useState(0);
@@ -92,6 +93,10 @@ export default function Login() {
           Admin: admin@gmail.com / admin123
           <br />
           <a href="/reset-password" style={{ color: "#1a237e" }}>Forgot password?</a>
+        </Typography>
+
+        <Typography variant="caption" sx={{ color: "#aaa", textAlign: "center", display: "block", mt: 1 }}>
+          v{BUILD_TIME}
         </Typography>
       </Paper>
     </Box>

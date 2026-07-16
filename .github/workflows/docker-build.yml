@@ -18,18 +18,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to Alibaba Cloud ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
       - name: Build & push backend
         uses: docker/build-push-action@v5
         with:
           context: ./server
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-api:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-api:latest
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar-api:latest
 
       - name: Build & push frontend
         uses: docker/build-push-action@v5
         with:
           context: ./ieltstar
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-web:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-web:latest
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar-web:latest
           build-args: |
             API_URL=${{ secrets.API_URL }}

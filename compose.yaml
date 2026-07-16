@@ -1,6 +1,6 @@
 services:
   backend:
-    image: your-dockerhub-username/ieltstar-api:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -19,7 +19,7 @@ services:
       - ieltstar
 
   frontend:
-    image: your-dockerhub-username/ieltstar-web:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:

@@ -50,7 +50,7 @@ docker exec ieltstar-api node seed-roles.js
 ```yaml
 services:
   backend:
-    image: 你的用户名/ieltstar-api:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -65,13 +65,13 @@ services:
       - ieltstar
 
   frontend:
-    image: 你的用户名/ieltstar-web:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      API_URL: http://backend:8080
+      API_URL: http://你的服务器IP:8080
     depends_on:
       - backend
     networks:
@@ -82,17 +82,29 @@ networks:
     driver: bridge
 ```
 
-把 `你的用户名` 和 `你的MongoDB地址` 换成实际值。
+把 `你的MongoDB地址` 和 `API_URL` 换成实际值。
 </details>
 
-## Docker Hub 自动构建
+## 自动构建
 
-推送代码到 `main` 分支后，GitHub Actions 自动构建并推送镜像：
+推送代码到 `main` 分支后，GitHub Actions 自动构建并**同时推送** Docker Hub 和阿里云 ACR：
 
-| 镜像 | 说明 |
-|------|------|
-| `你的用户名/ieltstar-api:latest` | 后端 API |
-| `你的用户名/ieltstar-web:latest` | 前端 |
+| 镜像 | Docker Hub | ACR (杭州) |
+|------|-----------|-----------|
+| 后端 API | `你的用户名/ieltstar-api:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest` |
+| 前端 | `你的用户名/ieltstar-web:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest` |
+
+### GitHub Secrets
+
+| Secret | 说明 |
+|--------|------|
+| `DOCKERHUB_USERNAME` | Docker Hub 用户名 |
+| `DOCKERHUB_TOKEN` | Docker Hub 访问令牌 |
+| `ACR_REGISTRY` | 阿里云镜像仓库地址，如 `registry.cn-shanghai.aliyuncs.com` |
+| `ACR_NAMESPACE` | ACR 命名空间，如 `ieltstar` |
+| `ACR_USERNAME` | 阿里云账号 |
+| `ACR_PASSWORD` | ACR 密码（容器镜像服务 → 访问凭证） |
+| `API_URL` | 前端构建时的后端地址，如 `http://你的服务器:8080` |
 
 ### 配置 CI/CD
 

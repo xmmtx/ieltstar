@@ -48,7 +48,7 @@ Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
 ```yaml
 services:
   backend:
-    image: your-dockerhub-username/ieltstar-api:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -63,13 +63,13 @@ services:
       - ieltstar
 
   frontend:
-    image: your-dockerhub-username/ieltstar-web:latest
+    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      API_URL: http://backend:8080
+      API_URL: http://ielts.xm233.cn:8080
     depends_on:
       - backend
     networks:
@@ -80,17 +80,29 @@ networks:
     driver: bridge
 ```
 
-Replace `your-dockerhub-username` and `your-mongo-host` with your actual values.
+Replace `your-mongo-host` and `API_URL` with your actual values.
 </details>
 
-## Deployment via Docker Hub
+## Deployment
 
-This repo auto-builds Docker images on push to `main` via GitHub Actions.
+This repo auto-builds Docker images on push to `main` via GitHub Actions, pushing to **both** Docker Hub and Alibaba Cloud ACR.
 
-| Image | Path |
-|-------|------|
-| `yourname/ieltstar-api:latest` | Backend API |
-| `yourname/ieltstar-web:latest` | Frontend |
+| Image | Docker Hub | ACR (cn-hangzhou) |
+|-------|-----------|-------------------|
+| Backend API | `yourname/ieltstar-api:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest` |
+| Frontend | `yourname/ieltstar-web:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest` |
+
+### GitHub Secrets
+
+| Secret | Description |
+|--------|-------------|
+| `DOCKERHUB_USERNAME` | Docker Hub username |
+| `DOCKERHUB_TOKEN` | Docker Hub access token |
+| `ACR_REGISTRY` | Alibaba Cloud registry, e.g. `registry.cn-shanghai.aliyuncs.com` |
+| `ACR_NAMESPACE` | ACR namespace, e.g. `ieltstar` |
+| `ACR_USERNAME` | Alibaba Cloud account |
+| `ACR_PASSWORD` | ACR password (Container Registry → Access Credentials) |
+| `API_URL` | Backend URL for frontend build, e.g. `http://your-server:8080` |
 
 ### Setup CI/CD
 
