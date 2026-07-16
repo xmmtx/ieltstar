@@ -62,6 +62,7 @@ export const deleteRole = async (req, res) => {
 
 // ============ Settings toggle ============
 let forceEmailVerification = false;
+let randomQuestionMode = false;
 let smtpConfig = {
   host: "",
   port: "587",
@@ -72,7 +73,7 @@ let smtpConfig = {
 let sessionTimeoutMinutes = 60; // default 1 hour
 
 export const getSettings = (req, res) => {
-  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes });
+  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes, randomQuestionMode });
 };
 export const updateSettings = (req, res) => {
   forceEmailVerification = req.body.forceEmailVerification ?? forceEmailVerification;
@@ -81,5 +82,6 @@ export const updateSettings = (req, res) => {
     sessionTimeoutMinutes = req.body.sessionTimeoutMinutes;
     setSessionTimeout(sessionTimeoutMinutes);
   }
-  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes });
+  if (req.body.randomQuestionMode !== undefined) randomQuestionMode = req.body.randomQuestionMode;
+  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes, randomQuestionMode });
 };

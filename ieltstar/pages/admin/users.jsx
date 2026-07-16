@@ -14,6 +14,7 @@ export default function AdminUsers() {
   const [roles, setRoles] = useState([]);
   const [settings, setSettings] = useState({
     forceEmailVerification: false,
+    randomQuestionMode: false,
     smtp: { host: "", port: "587", user: "", pass: "", from: "noreply@ieltstar.com" },
     sessionTimeoutMinutes: 60,
   });
@@ -172,10 +173,18 @@ export default function AdminUsers() {
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
               <Box>
                 <Typography fontWeight={600}>Force Email Verification</Typography>
-                <Typography variant="body2" color="text.secondary">When enabled, users must verify email before accessing exams</Typography>
+                <Typography variant="body2" color="text.secondary">Users must verify email before accessing exams</Typography>
               </Box>
               <Switch checked={settings.forceEmailVerification}
                 onChange={(e) => setSettings({ ...settings, forceEmailVerification: e.target.checked })} />
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+              <Box>
+                <Typography fontWeight={600}>Random Question Mode</Typography>
+                <Typography variant="body2" color="text.secondary">Randomly select questions from bank instead of fixed test</Typography>
+              </Box>
+              <Switch checked={settings.randomQuestionMode}
+                onChange={(e) => setSettings({ ...settings, randomQuestionMode: e.target.checked })} />
             </Box>
 
             <TextField fullWidth label="Session Timeout (minutes)" type="number"
