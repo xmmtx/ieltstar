@@ -5,71 +5,44 @@ import axios from "axios";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-interface User {
-  user: {
-    email: string;
-    name: string;
-    picture: string;
-  };
-}
-
-//Handler for login and sign-up and redirecting to admin or student dashboard
+// Redirect to login if Auth0 not configured, else Auth0 flow
 const Home = () => {
-  const user = useUser().user;
+  const { user, error, isLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      //redirect to admin if admin
-      console.log(user.email);
-      if (user.email === "admin@gmail.com") {
-        router.push("/admin/exam");
-      } else {
-        //handle log-in or sign-up
-        axios
-          .get(`${process.env.API_URL}/students/email/${user.email}`)
-          .then((res) => {
-            console.log(res);
-            if (res.data === null) {
-              //create new student
-              axios
-                .post(`${process.env.API_URL}/students`, {
-                  email: user.email,
-                  name: user.name,
-                  profileURL: user.picture,
-                })
-                .then((res) => {
-                  console.log(res);
-                  router.push("/student/dashboard");
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            } else {
-              router.push("/student/dashboard");
-            }
-          });
-      }
-    } else {
-      //when user logs-out
-      router.push("/landing");
+    // If Auth0 fails (not configured), redirect to simple login
+    if (error) {
+      router.push("/login");
+      return;
     }
-  }, [user]);
+    if (isLoading) return;
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    // Authenticated via Auth0
+    if (user.email === "admin@gmail.com") {
+      router.push("/admin/exam");
+    } else {
+      axios.get(`${process.env.API_URL}/students/email/${user.email}`)
+        .then((res) => {
+          if (res.data === null) {
+            axios.post(`${process.env.API_URL}/students`, {
+              email: user.email, name: user.name, profileURL: user.picture,
+            }).then(() => router.push("/student/dashboard"));
+          } else {
+            router.push("/student/dashboard");
+          }
+        });
+    }
+  }, [user, isLoading, error]);
 
   return (
-    <>
-      <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js"></script>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={true}
-      >
-        <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js"></script>
-        <CircularProgress color="primary" />
-      </Backdrop>
-    </>
+    <Backdrop open sx={{ color: "#fff", zIndex: 9999 }}>
+      <CircularProgress color="inherit" />
+    </Backdrop>
   );
 };
-Home.getLayout = function getLayout(page: any) {
-  return <>{page}</>;
-};
+Home.getLayout = (page: any) => page;
 export default Home;

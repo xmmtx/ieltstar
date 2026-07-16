@@ -22,7 +22,7 @@ const Hero = () => {
             variant="contained"
             className={styles.button}
             sx={{ width: "200px", fontSize: "16px" }}
-            href="/api/auth/login"
+            href="/login"
           >
             Get Started
           </Button>

@@ -5,6 +5,8 @@ import testRouter from "./test-router.js";
 import studentRouter from "./student-router.js";
 import emailRouter from "./email-router.js";
 import smsRouter from "./sms-router.js";
+import authRouter from "./auth-router.js";
+import adminRouter from "./admin-router.js";
 
 const routes = (app) => {
   app.use("/score", scoreRouter);
@@ -13,6 +15,8 @@ const routes = (app) => {
   app.use("/students", studentRouter);
   app.use("/email", emailRouter);
   app.use("/sms", smsRouter);
+  app.use("/auth", authRouter);
+  app.use("/admin", adminRouter);
 };
 
 export default routes;

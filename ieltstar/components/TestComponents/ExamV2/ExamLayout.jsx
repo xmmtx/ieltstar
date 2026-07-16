@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Box, Typography } from "@mui/material";
+import { useState, useCallback } from "react";
+import { Box, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import ExamTopBar from "./ExamTopBar";
 import ReadingView from "./ReadingView";
 import WritingView from "./WritingView";
@@ -152,10 +152,21 @@ const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "
     }
   };
 
+  // Auto-advance or submit when time is up
+  const handleTimeUp = useCallback(() => {
+    const isLast = activeIndex >= exams.length - 1;
+    if (isLast) {
+      handleFinishTest();
+    } else {
+      setActiveIndex((prev) => prev + 1);
+    }
+  }, [activeIndex, exams.length, handleFinishTest]);
+
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", bgcolor: "#f5f5f5" }}>
-      {/* Fixed Top Bar */}
+      {/* Fixed Top Bar - key forces timer reset per section */}
       <ExamTopBar
+        key={activeIndex}
         studentName="Candidate"
         durationMinutes={CATEGORY_DURATIONS[category] || 60}
         category={category}
@@ -164,6 +175,7 @@ const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "
           category === "Reading" ? () => setHighlightEnabled((v) => !v) : undefined
         }
         onFinishTest={handleFinishTest}
+        onTimeUp={handleTimeUp}
       />
 
       {/* Main Content Area */}
@@ -178,8 +190,45 @@ const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "
         onSectionChange={handleSectionChange}
         onPrev={handlePrev}
         onNext={handleNext}
-        totalQuestions={exams.reduce((sum, t) => sum + (t.questions?.length || 0), 0)}
+        questions={currentTest.questions || []}
+        answers={answers}
       />
+
+      {/* ScoreBoard Popup */}
+      <Dialog open={showScore} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ bgcolor: "#0d1b3e", color: "#fff", textAlign: "center" }}>
+          🎉 Exam Complete
+        </DialogTitle>
+        <DialogContent sx={{ py: 3 }}>
+          {scores && Object.keys(scores).length > 0 ? (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {Object.entries(scores).map(([cat, score]) => (
+                <Box key={cat} sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", p: 1.5, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+                  <Typography variant="body1" fontWeight={600}>{cat}</Typography>
+                  <Typography variant="h6" sx={{ color: "#1a237e", fontWeight: 700 }}>
+                    Band {score}
+                  </Typography>
+                </Box>
+              ))}
+              <Box sx={{ mt: 1, pt: 2, borderTop: "1px solid #ddd", textAlign: "center" }}>
+                <Typography variant="caption" color="text.secondary">
+                  Writing & Speaking scores pending teacher review.
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Typography textAlign="center" color="text.secondary">
+              All answers submitted. Writing & Speaking pending review.
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
+          <Button variant="contained" size="large" sx={{ bgcolor: "#0d1b3e" }}
+            onClick={() => { setShowScore(false); window.location.href = "/"; }}>
+            Return to Dashboard
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

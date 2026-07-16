@@ -59,7 +59,7 @@ const QuestionCard = ({ question, index, answers = {}, onAnswer }) => {
 };
 
 // ============ ListeningView - single column, matching official UI ============
-const ListeningView = ({ test, onNext, onPrev }) => {
+const ListeningView = ({ test, answers = {}, onAnswer }) => {
   if (!test || Object.keys(test).length === 0) {
     return <Box sx={{ p: 4, textAlign: "center", color: "#333" }}>Loading...</Box>;
   }

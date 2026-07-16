@@ -5,7 +5,10 @@ import dotenv from "dotenv";
 import routes from "./routes/index.js";
 
 // Load the environment variables
-dotenv.config();
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 // Create the app
 const app = express();

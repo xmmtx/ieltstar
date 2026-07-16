@@ -1,40 +1,46 @@
 import Box from "@mui/material/Box";
 import DefaultTopbar from "../Navigation/DefaultTopbar";
 import AdminDrawer from "../Navigation/AdminDrawer";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DrawerHeader from "../Navigation/DrawerHeader";
 import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-
-//Admin Layout for admin page
-export default function Default({ children }) {
+// Admin Layout - supports both Auth0 and simple login
+export default function AdminLayout({ children }) {
   const [open, setOpen] = useState(true);
-  const user = useUser().user;
   const router = useRouter();
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  // Try Auth0 first, fallback to localStorage
+  const auth0User = useUser().user;
+  const [user, setUser] = useState(null);
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    if (auth0User) {
+      setUser(auth0User);
+    } else {
+      // Fallback: check simple login
+      try {
+        const stored = localStorage.getItem("ieltstar_user");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setUser(parsed);
+        }
+      } catch {}
+    }
+  }, [auth0User]);
 
   useEffect(() => {
     if (user) {
-      //handle log-in or sign-up
-      if(user.email !== "admin@gmail.com") {
-        router.push("/");
+      if (user.email !== "admin@gmail.com") {
+        router.push("/test-exam");
       }
-    } else {
-      //when user logs-out
-      router.push("/landing");
     }
   }, [user]);
 
+  const handleDrawerOpen = () => setOpen(true);
+  const handleDrawerClose = () => setOpen(false);
 
   return (
     <>
