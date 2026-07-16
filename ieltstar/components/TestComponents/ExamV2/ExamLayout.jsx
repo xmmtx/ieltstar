@@ -13,7 +13,7 @@ const CATEGORY_DURATIONS = {
   Speaking: 15,
 };
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = process.env.API_URL || "http://localhost:8080";
 
 const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "", onFinish }) => {
   const [activeIndex, setActiveIndex] = useState(0);

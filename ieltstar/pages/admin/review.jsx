@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Refresh, RateReview } from "@mui/icons-material";
 
-const API = "http://localhost:8080";
+const API = process.env.API_URL || "http://localhost:8080";
 
 export default function WritingReview() {
   const [submissions, setSubmissions] = useState([]);

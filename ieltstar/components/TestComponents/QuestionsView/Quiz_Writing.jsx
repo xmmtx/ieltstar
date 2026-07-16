@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 const Quiz_Writing = () => {
   const [data, setData] = useState([])
   useEffect(() => {
-    axios.get('http://localhost:8080/questions')
+    axios.get(`${process.env.API_URL}/questions`)
         .then(response => setData(response.data))
   }, [])
   return (

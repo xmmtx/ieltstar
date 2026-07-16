@@ -9,7 +9,12 @@ const DB_URL = process.env.DB_URL || "mongodb://localhost:27017";
 const DB_NAME = process.env.DB_NAME || "ieltstar";
 
 const seedData = async () => {
-  await mongoose.connect(`${DB_URL}/${DB_NAME}`);
+  const user = process.env.DB_USER;
+  const pass = process.env.DB_PASS;
+  const url = new URL(`${DB_URL}/${DB_NAME}`);
+  if (user) url.username = user;
+  if (pass) url.password = pass;
+  await mongoose.connect(url.toString());
   console.log("Connected to MongoDB");
 
   // Clear existing data

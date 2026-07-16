@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Tabs, Tab } from "@mui/material";
 
-const API = "http://localhost:8080";
+const API = process.env.API_URL || "http://localhost:8080";
 
 export default function Login() {
   const [tab, setTab] = useState(0);

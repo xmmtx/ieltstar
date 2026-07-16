@@ -8,7 +8,7 @@ export default function TestExam() {
   const examId = "6a58ab61506742326baddc8a";
 
   useEffect(() => {
-    const API_URL = "http://localhost:8080";
+    const API_URL = process.env.API_URL || "http://localhost:8080";
     fetch(`${API_URL}/exams/${examId}/tests`)
       .then((r) => r.json())
       .then((data) => {

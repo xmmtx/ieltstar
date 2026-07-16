@@ -59,6 +59,8 @@ services:
       PORT: 8080
       DB_NAME: ieltstar
       DB_URL: mongodb://你的MongoDB地址:27017
+      DB_USER: ""
+      DB_PASS: ""
     networks:
       - ieltstar
 

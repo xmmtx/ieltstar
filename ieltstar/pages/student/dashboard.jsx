@@ -11,7 +11,7 @@ import SuggestedStudyMaterial from "../../components/Student/Dashboard/Suggested
 import BoltIcon from "@mui/icons-material/Bolt";
 import Box from "@mui/material/Box";
 
-const API = "http://localhost:8080";
+const API = process.env.API_URL || "http://localhost:8080";
 
 const getUser = () => {
   try { return JSON.parse(localStorage.getItem("ieltstar_user") || "{}"); }

@@ -63,7 +63,8 @@ export default function BasicPopover(props) {
             <Button variant="outlined" endIcon={<ExitToAppIcon />} color="error"
               onClick={async () => {
                 const token = localStorage.getItem("ieltstar_token");
-                await fetch("http://localhost:8080/auth/logout", {
+                const API = process.env.API_URL || "http://localhost:8080";
+                await fetch(`${API}/auth/logout`, {
                   method: "POST",
                   headers: { Authorization: `Bearer ${token}` },
                 });

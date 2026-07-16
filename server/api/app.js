@@ -25,7 +25,12 @@ routes(app);
 // Connect to the database
 try {
   console.log("Connecting to the database...");
-  await mongoose.connect(`${process.env.DB_URL}/${process.env.DB_NAME}`);
+  const user = process.env.DB_USER;
+  const pass = process.env.DB_PASS;
+  const url = new URL(`${process.env.DB_URL}/${process.env.DB_NAME}`);
+  if (user) url.username = user;
+  if (pass) url.password = pass;
+  await mongoose.connect(url.toString());
   console.log("Successfully connected to MongoDB");
 } catch (e) {
   console.log("Error connecting to database : ", e);

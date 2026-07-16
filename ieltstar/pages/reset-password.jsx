@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert } from "@mui/material";
 
-const API = "http://localhost:8080";
+const API = process.env.API_URL || "http://localhost:8080";
 
 export default function ResetPassword() {
   const [email, setEmail] = useState("");

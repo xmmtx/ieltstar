@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { Add, Edit, Delete, Shield, Refresh, Settings } from "@mui/icons-material";
 
-const API = "http://localhost:8080";
+const API = process.env.API_URL || "http://localhost:8080";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);

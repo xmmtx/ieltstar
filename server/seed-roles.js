@@ -7,7 +7,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const seed = async () => {
-  await mongoose.connect(`${process.env.DB_URL || "mongodb://localhost:27017"}/${process.env.DB_NAME || "ieltstar"}`);
+  const user = process.env.DB_USER;
+  const pass = process.env.DB_PASS;
+  const url = new URL(`${process.env.DB_URL || "mongodb://localhost:27017"}/${process.env.DB_NAME || "ieltstar"}`);
+  if (user) url.username = user;
+  if (pass) url.password = pass;
+  await mongoose.connect(url.toString());
   console.log("Connected");
 
   // Clear existing roles
