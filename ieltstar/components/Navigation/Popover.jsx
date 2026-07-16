@@ -60,7 +60,17 @@ export default function BasicPopover(props) {
           </ListItem>
           <Divider />
           <ListItem>
-            <Button variant="outlined" endIcon={<ExitToAppIcon />} component={Link} href="/api/auth/logout" color="error">
+            <Button variant="outlined" endIcon={<ExitToAppIcon />} color="error"
+              onClick={async () => {
+                const token = localStorage.getItem("ieltstar_token");
+                await fetch("http://localhost:8080/auth/logout", {
+                  method: "POST",
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                localStorage.removeItem("ieltstar_token");
+                localStorage.removeItem("ieltstar_user");
+                window.location.href = "/login";
+              }}>
               Logout
             </Button>
           </ListItem>

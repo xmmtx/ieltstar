@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Role from "../models/Role.js";
+import { setSessionTimeout } from "./auth-controller.js";
 
 // ============ Users ============
 export const getUsers = async (req, res) => {
@@ -61,10 +62,24 @@ export const deleteRole = async (req, res) => {
 
 // ============ Settings toggle ============
 let forceEmailVerification = false;
+let smtpConfig = {
+  host: "",
+  port: "587",
+  user: "",
+  pass: "",
+  from: "noreply@ieltstar.com",
+};
+let sessionTimeoutMinutes = 60; // default 1 hour
+
 export const getSettings = (req, res) => {
-  res.json({ forceEmailVerification });
+  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes });
 };
 export const updateSettings = (req, res) => {
   forceEmailVerification = req.body.forceEmailVerification ?? forceEmailVerification;
-  res.json({ forceEmailVerification });
+  if (req.body.smtp) smtpConfig = { ...smtpConfig, ...req.body.smtp };
+  if (req.body.sessionTimeoutMinutes) {
+    sessionTimeoutMinutes = req.body.sessionTimeoutMinutes;
+    setSessionTimeout(sessionTimeoutMinutes);
+  }
+  res.json({ forceEmailVerification, smtp: smtpConfig, sessionTimeoutMinutes });
 };

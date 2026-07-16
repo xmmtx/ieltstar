@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export default function TestExam() {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
-  const examId = "6a577a2a81b1072bf43b6f4a";
+  const examId = "6a58ab61506742326baddc8a";
 
   useEffect(() => {
     const API_URL = "http://localhost:8080";

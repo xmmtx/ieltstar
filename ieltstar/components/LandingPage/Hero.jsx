@@ -10,13 +10,11 @@ const Hero = () => {
       <Grid container spacing={6} className={styles.gridContainer}>
         <Grid item xs={12} md={7}>
           <Typography variant="h3" fontWeight={700} className={styles.title}>
-            Free online IELTS practice tests for 2022.
+            IELTS Computer-Based Mock Test Platform
           </Typography>
           <Typography variant="h6" className={styles.subtitle}>
-            Familiarize yourself with the test format, test yourself under timed
-            conditions, and more! About 60,000 people take an IELTS test every
-            week. Learn why our test is the most popular. For Teachers. Types:
-            Academic, General Training, Work or Immigration.
+            Practice Listening, Reading, and Writing under realistic exam conditions.
+            Built for Academic IELTS preparation with auto-scoring and detailed feedback.
           </Typography>
           <Button
             variant="contained"

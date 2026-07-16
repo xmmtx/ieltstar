@@ -95,61 +95,9 @@ export const addTestHistory = async (req, res) => {
             });
             req.body.score = req.body.score / test.questions.length * 9
         }
-        else if(testType === "Writing") {
-            let score = 9;
-            //handle score for writing
-            let wordCount = [
-                req.body.score[0].wordCount,
-                req.body.score[1].wordCount
-            ]
-            req.body.score = req.body.score.map(score => {
-                if(score === 0) {
-                    return {
-                        suggestionsCount : 0
-                    }
-                }
-                else {
-                    return score
-                }
-            })
-            req.body.score = req.body.score[0].suggestionsCount + req.body.score[1].suggestionsCount
-            let totalSuggestions = req.body.score * 0.00045;
-            score = req.body.score - totalSuggestions;
-            if(wordCount[0] < 250) {
-                score = req.body.score - 2
-            }
-            if(wordCount[1] < 150) {
-                score = req.body.score - 2
-            }
-            if(req.body.score < 0) {
-                score = 0
-            }
-            req.body.score = score
-        }
-        else if(testType === "Speaking") {
-            //handle score for speaking
-            req.body.score = req.body.score.reduce((prev, current) => prev + current ? current.readabilityScore:0, 0)
-            if(req.body.score > 0) {
-                req.body.score = req.body.score / 2
-            }
-            if(req.body.score > 90) {
-                req.body.score = 9
-            }
-            else if(req.body.score > 80) {
-                req.body.score = 8.5
-            }
-            else if(req.body.score > 70) {
-                req.body.score = 8
-            }
-            else if(req.body.score > 60) {
-                req.body.score = 7.5
-            }
-            else if(req.body.score > 50) {
-                req.body.score = 7
-            }
-            else {
-                req.body.score = 4.5
-            }
+        else if(testType === "Writing" || testType === "Speaking") {
+            // Store as pending teacher review (score = -1)
+            req.body.score = -1;
         }
         req.body.score =  Math.round(req.body.score*2)/2;
         const updatedStudent = await studentService.addHistory(student._id, req.body);

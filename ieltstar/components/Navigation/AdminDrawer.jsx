@@ -10,6 +10,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DrawerHeader from "./DrawerHeader";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PeopleIcon from '@mui/icons-material/People';
 import Link from "next/link";
 import { useState } from "react";
 
@@ -76,6 +77,12 @@ const AdminDrawer = ({ open, handleDrawerClose }) => {
             <ManageAccountsIcon />
           </ListItemIcon>
           <ListItemText primary="Manage Exams" />
+        </ListItem>
+        <ListItem button component={Link} href="/admin/users" selected={selected == 'users'} onClick={() => setSelected('users')}>
+          <ListItemIcon>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Manage Users" />
         </ListItem>
        </List>
     </Drawer>

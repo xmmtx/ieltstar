@@ -1,5 +1,5 @@
-import { Typography, Container, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Typography, Container, Grid } from "@mui/material";
 import Iconify from "../../components/Iconify";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -10,112 +10,42 @@ import TestTimeline from "../../components/Student/Dashboard/TestTimeline";
 import SuggestedStudyMaterial from "../../components/Student/Dashboard/SuggestedStudyMaterial";
 import BoltIcon from "@mui/icons-material/Bolt";
 import Box from "@mui/material/Box";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import axios from "axios";
 
-// Dashboard Page for Student to see all stats and leaderboard
+const API = "http://localhost:8080";
+
+const getUser = () => {
+  try { return JSON.parse(localStorage.getItem("ieltstar_user") || "{}"); }
+  catch { return {}; }
+};
+
 const dashboard = () => {
-  const user = useUser().user;
+  const [user, setUser] = useState({});
   const [userData, setUserData] = useState({});
-  const [summary, setSummary] = useState({
-    reading: 0,
-    listening: 0,
-    writing: 0,
-    speaking: 0,
-  });
+  const [summary, setSummary] = useState({ reading: 0, listening: 0, writing: 0, speaking: 0 });
   const [timeline, setTimeline] = useState([]);
+  useEffect(() => { AOS.init({ once: true }); setUser(getUser()); }, []);
 
   useEffect(() => {
-    AOS.init({
-      once: true,
-    });
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(`${process.env.API_URL}/students/email/${user.email}`)
-        .then((user) => {
-          setUserData(user.data);
-          user.data.testHistory.forEach((test) => {
-            if (test.testType === "Reading")
-              setSummary((prev) => ({
-                ...prev,
-                reading: prev.reading + test.score,
-              }));
-            if (test.testType === "Listening")
-              setSummary((prev) => ({
-                ...prev,
-                listening: prev.listening + test.score,
-              }));
-            if (test.testType === "Writing")
-              setSummary((prev) => ({
-                ...prev,
-                writing: prev.writing + test.score,
-              }));
-            if (test.testType === "Speaking")
-              setSummary((prev) => ({
-                ...prev,
-                speaking: prev.speaking + test.score,
-              }));
+    if (user.email) {
+      fetch(`${API}/students/email/${user.email}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (!data) return;
+          setUserData(data);
+          let s = { reading: 0, listening: 0, writing: 0, speaking: 0 };
+          (data.testHistory || []).forEach((test) => {
+            if (test.testType === "Reading") s.reading += test.score || 0;
+            if (test.testType === "Listening") s.listening += test.score || 0;
+            if (test.testType === "Writing") s.writing += test.score || 0;
+            if (test.testType === "Speaking") s.speaking += test.score || 0;
           });
-          //average the sores
-          setSummary((prev) => {
-            const readingTests = user.data.testHistory.filter(
-              (test) => test.testType === "Reading"
-            ).length
-              ? user.data.testHistory.filter(
-                  (test) => test.testType === "Reading"
-                ).length
-              : 1;
-            const listeningTests = user.data.testHistory.filter(
-              (test) => test.testType === "Listening"
-            ).length
-              ? user.data.testHistory.filter(
-                  (test) => test.testType === "Listening"
-                ).length
-              : 1;
-            const writingTests = user.data.testHistory.filter(
-              (test) => test.testType === "Writing"
-            ).length
-              ? user.data.testHistory.filter(
-                  (test) => test.testType === "Writing"
-                ).length
-              : 1;
-            const speakingTests = user.data.testHistory.filter(
-              (test) => test.testType === "Speaking"
-            ).length
-              ? user.data.testHistory.filter(
-                  (test) => test.testType === "Speaking"
-                ).length
-              : 1;
-
-            return {
-              reading: Math.round((prev.reading / readingTests) * 2) / 2,
-              listening: Math.round((prev.listening / listeningTests) * 2) / 2,
-              writing: Math.round((prev.writing / writingTests) * 2) / 2,
-              speaking: Math.round((prev.speaking / speakingTests) * 2) / 2,
-            };
-          });
-
-          //timeline
-          const examIds = [
-            ...new Set(user.data.testHistory.map((test) => test.examId)),
-          ];
-
-          axios
-            .all(
-              examIds.map((examId) =>
-                axios.get(`${process.env.API_URL}/exams/${examId}`)
-              )
-            )
-            .then((data) => {
-              console.log(data.map((exam) => exam.data).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(0, 5))
-              setTimeline(data.map((exam) => exam.data).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).slice(0, 5));
-            });
+          setSummary(s);
+          setTimeline(data.testHistory || []);
         });
     }
-  }, [user]);
+  }, [user.email]);
+
+  if (!user.email) return <Box sx={{ p: 4 }}>Please <a href="/login">login</a> to view dashboard.</Box>;
 
   return (
     <Container maxWidth="xl">

@@ -141,7 +141,7 @@ export default function DefaultTopbar({ open, handleDrawerOpen }) {
             color="inherit"
           >
             {!user ? (
-              <a href="/api/auth/login">
+              <a href="/login">
                 <AccountCircle />
               </a>
             ) : (

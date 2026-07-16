@@ -4,6 +4,11 @@ import User from "../models/User.js";
 import Role from "../models/Role.js";
 import Token from "../models/Token.js";
 
+// Shared with admin-controller
+let sessionTimeoutMinutes = 60;
+export const getSessionTimeout = () => sessionTimeoutMinutes;
+export const setSessionTimeout = (v) => { sessionTimeoutMinutes = v; };
+
 // ============ Register ============
 export const register = async (req, res) => {
   try {
@@ -60,13 +65,14 @@ export const login = async (req, res) => {
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
-    // Generate session token (simple JWT-like for now)
+    // Generate session token with configurable timeout
+    const timeout = sessionTimeoutMinutes || 60;
     const sessionToken = crypto.randomBytes(48).toString("hex");
     await Token.create({
       userId: user._id,
       token: sessionToken,
-      type: "password_reset", // reuse token model for session
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      type: "password_reset",
+      expiresAt: new Date(Date.now() + timeout * 60 * 1000),
     });
 
     const permissions = user.roles.reduce((acc, role) => {
@@ -107,7 +113,16 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-// ============ Get current user ============
+// ============ Logout ============
+export const logout = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (token) await Token.deleteOne({ token });
+    res.json({ message: "Logged out" });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+};
 export const me = async (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");

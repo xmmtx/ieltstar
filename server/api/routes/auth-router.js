@@ -6,6 +6,6 @@ router.post("/register", auth.register);
 router.post("/login", auth.login);
 router.get("/me", auth.me);
 router.get("/verify-email/:token", auth.verifyEmail);
-router.post("/resend-verification", auth.resendVerification);
+router.post("/logout", auth.logout);
 
 export default router;

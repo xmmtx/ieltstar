@@ -90,6 +90,8 @@ export default function Login() {
 
         <Typography variant="caption" color="text.secondary" textAlign="center" display="block" mt={2}>
           Admin: admin@gmail.com / admin123
+          <br />
+          <a href="/reset-password" style={{ color: "#1a237e" }}>Forgot password?</a>
         </Typography>
       </Paper>
     </Box>
@@ -98,9 +100,4 @@ export default function Login() {
 
 Login.getLayout = (page) => page;
 Login.skipAuth = true;
-    </Box>
-  );
-}
-
-Login.getLayout = (page) => page;
 Login.skipAuth = true;
