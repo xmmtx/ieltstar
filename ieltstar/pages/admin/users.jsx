@@ -6,7 +6,7 @@ import {
   Chip, Select, MenuItem, FormControl, InputLabel, Typography, Box, Switch, Alert, TextField, Divider,
 } from "@mui/material";
 import { Add, Edit, Delete, Shield, Refresh, Settings } from "@mui/icons-material";
-import { getApiUrl } from "../../../utils/api";
+import { getApiUrl } from "../../utils/api";
 
 const API = getApiUrl();
 

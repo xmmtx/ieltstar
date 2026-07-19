@@ -6,7 +6,7 @@ import {
   Typography, Box, TextField, Chip, Alert,
 } from "@mui/material";
 import { Refresh, RateReview } from "@mui/icons-material";
-import { getApiUrl } from "../../../utils/api";
+import { getApiUrl } from "../../utils/api";
 
 export default function WritingReview() {
   const [submissions, setSubmissions] = useState([]);

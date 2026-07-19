@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert } from "@mui/material";
-import { getApiUrl } from "../../utils/api";
+import { getApiUrl } from "../utils/api";
 
 const API = getApiUrl();
 
