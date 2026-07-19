@@ -9,14 +9,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DrawerHeader from "./DrawerHeader";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import PeopleIcon from '@mui/icons-material/People';
-import RateReviewIcon from '@mui/icons-material/RateReview';
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PeopleIcon from "@mui/icons-material/People";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ArchiveIcon from "@mui/icons-material/Archive";
 import Link from "next/link";
 import { useState } from "react";
+import { useI18n } from "../../utils/i18n";
 
-
-//drawer syling and theming
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -56,44 +57,62 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-//side drawer for admin page
-const AdminDrawer = ({ open, handleDrawerClose }) => {
-  const [selected, setSelected] = useState('exam');
+const AdminDrawer = ({ open, handleDrawerClose, user }) => {
+  const [selected, setSelected] = useState("exam");
   const theme = useTheme();
+  const { t } = useI18n();
+  const role = user?.role || "student";
+  const isAdmin = role === "admin";
+  const isTeacher = role === "teacher";
+  const isStaff = isAdmin || isTeacher;
+
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
         <IconButton onClick={handleDrawerClose}>
-          {theme.direction === "rtl" ? (
-            <ChevronRightIcon />
-          ) : (
-            <ChevronLeftIcon />
-          )}
+          {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
         </IconButton>
       </DrawerHeader>
       <Divider />
       <List>
-        <ListItem button component={Link} href="/admin/exam" selected={selected == 'exam'} onClick={() => setSelected('exam')}>
-          <ListItemIcon>
-            <ManageAccountsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Manage Exams" />
-        </ListItem>
-        <ListItem button component={Link} href="/admin/users" selected={selected == 'users'} onClick={() => setSelected('users')}>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Manage Users" />
-        </ListItem>
-        <ListItem button component={Link} href="/admin/review" selected={selected == 'review'} onClick={() => setSelected('review')}>
-          <ListItemIcon>
-            <RateReviewIcon />
-          </ListItemIcon>
-          <ListItemText primary="Writing Review" />
-        </ListItem>
-       </List>
+        {/* Student items */}
+        {!isStaff && (
+          <>
+            <ListItem button component={Link} href="/student/dashboard" selected={selected === "dashboard"} onClick={() => setSelected("dashboard")}>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary={t("dashboard")} />
+            </ListItem>
+            <ListItem button component={Link} href="/student/archive" selected={selected === "archive"} onClick={() => setSelected("archive")}>
+              <ListItemIcon><ArchiveIcon /></ListItemIcon>
+              <ListItemText primary={t("archive")} />
+            </ListItem>
+          </>
+        )}
+
+        {/* Teacher / Admin items */}
+        {isStaff && (
+          <ListItem button component={Link} href="/admin/exam" selected={selected === "exam"} onClick={() => setSelected("exam")}>
+            <ListItemIcon><ManageAccountsIcon /></ListItemIcon>
+            <ListItemText primary={t("manage_exams")} />
+          </ListItem>
+        )}
+
+        {/* Admin-only */}
+        {isAdmin && (
+          <ListItem button component={Link} href="/admin/users" selected={selected === "users"} onClick={() => setSelected("users")}>
+            <ListItemIcon><PeopleIcon /></ListItemIcon>
+            <ListItemText primary={t("manage_users")} />
+          </ListItem>
+        )}
+
+        {/* Teacher / Admin */}
+        {isStaff && (
+          <ListItem button component={Link} href="/admin/review" selected={selected === "review"} onClick={() => setSelected("review")}>
+            <ListItemIcon><RateReviewIcon /></ListItemIcon>
+            <ListItemText primary={t("writing_review")} />
+          </ListItem>
+        )}
+      </List>
     </Drawer>
   );
 };
-
-export default AdminDrawer;

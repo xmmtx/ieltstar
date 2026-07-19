@@ -15,6 +15,7 @@ import Router from "next/router";
 import NProgress from "nprogress"; //nprogress module
 import "nprogress/nprogress.css"; //styles of nprogress
 import useOneSignal from "../utils/useOneSignal";
+import { I18nProvider } from "../utils/i18n";
 
 //Route Events.
 Router.events.on("routeChangeStart", () => NProgress.start());
@@ -40,6 +41,7 @@ const myApp = (props: MyAppProps) => {
 
   const content = (
     <Provider store={store}>
+      <I18nProvider>
       <CacheProvider value={emotionCache}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -52,6 +54,7 @@ const myApp = (props: MyAppProps) => {
           </ThemeProvider>
         </ColorModeContext.Provider>
       </CacheProvider>
+      </I18nProvider>
     </Provider>
   );
 

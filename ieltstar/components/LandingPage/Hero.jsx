@@ -3,18 +3,19 @@ import { Grid, Typography, Button, Box } from "@mui/material";
 import myteam from "../../images/online.svg";
 import styles from "../../styles/Landing.module.scss";
 import Image from "next/image";
+import { useI18n } from "../../utils/i18n";
 
 const Hero = () => {
+  const { t } = useI18n();
   return (
     <Box className={styles.heroBox}>
       <Grid container spacing={6} className={styles.gridContainer}>
         <Grid item xs={12} md={7}>
           <Typography variant="h3" fontWeight={700} className={styles.title}>
-            IELTS Computer-Based Mock Test Platform
+            {t("landing_title")}
           </Typography>
           <Typography variant="h6" className={styles.subtitle}>
-            Practice Listening, Reading, and Writing under realistic exam conditions.
-            Built for Academic IELTS preparation with auto-scoring and detailed feedback.
+            {t("landing_subtitle")}
           </Typography>
           <Button
             variant="contained"
@@ -22,13 +23,13 @@ const Hero = () => {
             sx={{ width: "200px", fontSize: "16px" }}
             href="/login"
           >
-            Get Started
+            {t("get_started")}
           </Button>
         </Grid>
         <Grid item xs={12} md={5}>
           <Image
             src={myteam}
-            alt="Picture of the author"
+            alt="IELTS Online Practice"
             className={styles.largeImage}
           />
         </Grid>

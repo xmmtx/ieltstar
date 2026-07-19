@@ -30,7 +30,7 @@ export const register = async (req, res) => {
       email: email.toLowerCase(),
       passwordHash,
       fullName,
-      roles: studentRole ? [studentRole._id] : [],
+      role: studentRole?._id || null,
     });
 
     // Generate verification token
@@ -58,7 +58,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
-    const user = await User.findOne({ email: email.toLowerCase() }).populate("roles");
+    const user = await User.findOne({ email: email.toLowerCase() }).populate("role");
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
     if (!user.isActive) return res.status(403).json({ error: "Account disabled" });
 
@@ -75,9 +75,8 @@ export const login = async (req, res) => {
       expiresAt: new Date(Date.now() + timeout * 60 * 1000),
     });
 
-    const permissions = user.roles.reduce((acc, role) => {
-      return [...acc, ...(role.permissions || [])];
-    }, []);
+    const permissions = user.role?.permissions || [];
+    const roleName = user.role?.name || "student";
 
     res.json({
       token: sessionToken,
@@ -85,6 +84,7 @@ export const login = async (req, res) => {
         id: user._id,
         email: user.email,
         fullName: user.fullName,
+        role: roleName,
         isAdmin: permissions.includes("admin.all"),
         emailVerified: !!user.emailVerifiedAt,
         permissions,
@@ -133,13 +133,14 @@ export const me = async (req, res) => {
       return res.status(401).json({ error: "Session expired" });
     }
 
-    const user = await User.findById(tokenDoc.userId).populate("roles");
+    const user = await User.findById(tokenDoc.userId).populate("role");
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const permissions = user.roles.reduce((acc, role) => [...acc, ...(role.permissions || [])], []);
+    const permissions = user.role?.permissions || [];
 
     res.json({
       id: user._id, email: user.email, fullName: user.fullName,
+      role: user.role?.name || "student",
       isAdmin: permissions.includes("admin.all"),
       emailVerified: !!user.emailVerifiedAt, permissions,
     });

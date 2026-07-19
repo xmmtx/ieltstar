@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Tabs, Tab } from "@mui/material";
 import { getApiUrl } from "../utils/api";
+import { useI18n } from "../utils/i18n";
+import LanguageSwitcher from "../components/Global/LanguageSwitcher";
 
 const BUILD_TIME = process.env.BUILD_TIME || "dev";
 
 export default function Login() {
+  const { t } = useI18n();
   const [tab, setTab] = useState(0);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +23,7 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (!email || !password) { setError("Email and password required"); return; }
+    if (!email || !password) { setError(t("email_required")); return; }
     setLoading(true); setError("");
 
     try {
@@ -30,11 +33,16 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) throw new Error(data.error || t("invalid_credentials"));
 
       localStorage.setItem("ieltstar_token", data.token);
       localStorage.setItem("ieltstar_user", JSON.stringify(data.user));
-      window.location.href = data.user.isAdmin ? "/admin/exam" : "/test-exam";
+      // Role-based redirect
+      if (data.user.role === "admin" || data.user.role === "teacher") {
+        window.location.href = "/admin/exam";
+      } else {
+        window.location.href = "/student/dashboard";
+      }
     } catch (e) {
       setError(e.message);
     } finally { setLoading(false); }
@@ -42,7 +50,7 @@ export default function Login() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!email || !password || !fullName) { setError("All fields required"); return; }
+    if (!email || !password || !fullName) { setError(t("all_fields_required")); return; }
     setLoading(true); setError(""); setSuccess("");
 
     try {
@@ -53,7 +61,7 @@ export default function Login() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setSuccess("Registered! Check your email for verification (or use the demo: skip for now).");
+      setSuccess(t("register_success"));
       setTimeout(() => setTab(0), 2000);
     } catch (e) {
       setError(e.message);
@@ -62,17 +70,20 @@ export default function Login() {
 
   return (
     <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "#0d1b3e" }}>
-      <Paper sx={{ p: 5, maxWidth: 420, width: "100%", mx: 2 }}>
+      <Paper sx={{ p: 5, maxWidth: 420, width: "100%", mx: 2, position: "relative" }}>
+        <Box sx={{ position: "absolute", top: 8, right: 8 }}>
+          <LanguageSwitcher />
+        </Box>
         <Typography variant="h4" fontWeight={700} textAlign="center" gutterBottom sx={{ color: "#0d1b3e" }}>
-          IELTSTAR
+          {t("app_name")}
         </Typography>
         <Typography variant="body2" color="text.secondary" textAlign="center" mb={2}>
-          IELTS Computer-Based Mock Test
+          {t("app_subtitle")}
         </Typography>
 
         <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
-          <Tab label="Sign In" />
-          <Tab label="Register" />
+          <Tab label={t("sign_in")} />
+          <Tab label={t("register")} />
         </Tabs>
 
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -80,34 +91,29 @@ export default function Login() {
 
         <form onSubmit={tab === 0 ? handleLogin : handleRegister}>
           {tab === 1 && (
-            <TextField fullWidth label="Full Name" value={fullName}
+            <TextField fullWidth label={t("full_name")} value={fullName}
               onChange={(e) => setFullName(e.target.value)} sx={{ mb: 2 }} />
           )}
-          <TextField fullWidth label="Email" type="email" value={email}
+          <TextField fullWidth label={t("email")} type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} sx={{ mb: 2 }} placeholder="student@school.edu" />
-          <TextField fullWidth label="Password" type="password" value={password}
-            onChange={(e) => setPassword(e.target.value)} sx={{ mb: 2 }} placeholder="Min 6 characters" />
+          <TextField fullWidth label={t("password")} type="password" value={password}
+            onChange={(e) => setPassword(e.target.value)} sx={{ mb: 2 }} placeholder={t("password_required")} />
 
           <Button type="submit" variant="contained" fullWidth size="large" disabled={loading}
             sx={{ bgcolor: "#0d1b3e", py: 1.5, "&:hover": { bgcolor: "#1a237e" } }}>
-            {loading ? "Please wait..." : tab === 0 ? "Sign In" : "Create Account"}
+            {loading ? t("please_wait") : tab === 0 ? t("sign_in") : t("create_account")}
           </Button>
         </form>
 
         <Typography variant="caption" color="text.secondary" textAlign="center" display="block" mt={2}>
-          Admin: admin@gmail.com / admin123
+          {t("admin_hint")}
           <br />
-          <a href="/reset-password" style={{ color: "#1a237e" }}>Forgot password?</a>
+          <a href="/reset-password" style={{ color: "#1a237e" }}>{t("forgot_password")}</a>
         </Typography>
 
         <Typography variant="caption" sx={{ color: "#aaa", textAlign: "center", display: "block", mt: 1 }}>
-          build: {BUILD_TIME}
-          {apiUrl && (
-            <>
-              <br />
-              api: {apiUrl}
-            </>
-          )}
+          {t("build")}: {BUILD_TIME}
+          {apiUrl && (<><br />{t("api")}: {apiUrl}</>)}
         </Typography>
       </Paper>
     </Box>

@@ -4,53 +4,41 @@ import AdminDrawer from "../Navigation/AdminDrawer";
 import { useState, useEffect } from "react";
 import DrawerHeader from "../Navigation/DrawerHeader";
 import Head from "next/head";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/router";
+import { useI18n } from "../../utils/i18n";
 
-// Admin Layout - supports both Auth0 and simple login
+// Unified Dashboard Layout — role-based sidebar
 export default function AdminLayout({ children }) {
   const [open, setOpen] = useState(true);
-  const router = useRouter();
-
-  // Try Auth0 first, fallback to localStorage
-  const auth0User = useUser().user;
   const [user, setUser] = useState(null);
+  const router = useRouter();
+  const { t } = useI18n();
 
   useEffect(() => {
-    if (auth0User) {
-      setUser(auth0User);
-    } else {
-      // Fallback: check simple login
-      try {
-        const stored = localStorage.getItem("ieltstar_user");
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setUser(parsed);
-        }
-      } catch {}
-    }
-  }, [auth0User]);
-
-  useEffect(() => {
-    if (user) {
-      if (user.email !== "admin@gmail.com") {
-        router.push("/test-exam");
-      }
-    }
-  }, [user]);
+    try {
+      const stored = localStorage.getItem("ieltstar_user");
+      if (stored) setUser(JSON.parse(stored));
+    } catch {}
+  }, []);
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
+  const pageTitle = user?.role === "student"
+    ? `IELTSTAR - ${t("student_dashboard")}`
+    : user?.role === "teacher"
+      ? `IELTSTAR - ${t("teacher_dashboard")}`
+      : `IELTSTAR - ${t("admin_dashboard")}`;
+
   return (
     <>
       <Head>
-        <title>IELTSTAR - Admin</title>
-        <link rel="icon" type="image/x-icon" href="/favicon.png"></link>
+        <title>{pageTitle}</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.png" />
       </Head>
       <Box sx={{ display: "flex" }}>
         <DefaultTopbar open={open} handleDrawerOpen={handleDrawerOpen} />
-        <AdminDrawer open={open} handleDrawerClose={handleDrawerClose} />
+        <AdminDrawer open={open} handleDrawerClose={handleDrawerClose} user={user} />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           {children}

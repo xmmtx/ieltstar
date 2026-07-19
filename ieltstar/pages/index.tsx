@@ -1,49 +1,69 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import axios from "axios";
+import styles from "../styles/Landing.module.scss";
+import Hero from "../components/LandingPage/Hero";
+import Header from "../components/LandingPage/Header";
+import Section from "../components/LandingPage/Section";
+import AboutUs from "../components/LandingPage/AboutUs";
+import Testimonial from "../components/LandingPage/Testimonial";
+import Footer from "../components/LandingPage/Footer";
+import Head from "next/head";
 import { getApiUrl } from "../utils/api";
+import { useI18n } from "../utils/i18n";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-// Redirect to login if Auth0 not configured, else Auth0 flow
 const Home = () => {
-  const { user, error, isLoading } = useUser();
   const router = useRouter();
+  const { t } = useI18n();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // If Auth0 fails (not configured), redirect to simple login
-    if (error) {
-      router.push("/login");
-      return;
-    }
-    if (isLoading) return;
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    // Authenticated via Auth0
-    if (user.email === "admin@gmail.com") {
-      router.push("/admin/exam");
-    } else {
-      axios.get(`${getApiUrl()}/students/email/${user.email}`)
-        .then((res) => {
-          if (res.data === null) {
-            axios.post(`${getApiUrl()}/students`, {
-              email: user.email, name: user.name, profileURL: user.picture,
-            }).then(() => router.push("/student/dashboard"));
+    const token = localStorage.getItem("ieltstar_token");
+    if (token) {
+      fetch(`${getApiUrl()}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((r) => r.json())
+        .then((user) => {
+          if (user.role === "admin" || user.role === "teacher") {
+            router.replace("/admin/exam");
           } else {
-            router.push("/student/dashboard");
+            router.replace("/student/dashboard");
           }
-        });
+        })
+        .catch(() => setChecking(false));
+    } else {
+      setChecking(false);
     }
-  }, [user, isLoading, error]);
+  }, []);
+
+  if (checking) {
+    return (
+      <Backdrop open sx={{ color: "#fff", zIndex: 9999 }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
-    <Backdrop open sx={{ color: "#fff", zIndex: 9999 }}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
+    <>
+      <Head>
+        <title>{t("app_name")} - {t("app_subtitle")}</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.png" />
+      </Head>
+      <div className={styles.bgWrap}>
+        <Header />
+        <Hero />
+        <Section />
+        <AboutUs />
+        <Testimonial />
+        <Footer />
+      </div>
+    </>
   );
 };
+
 Home.getLayout = (page: any) => page;
+Home.skipAuth = true;
 export default Home;

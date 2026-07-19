@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert } from "@mui/material";
 import { getApiUrl } from "../utils/api";
+import { useI18n } from "../utils/i18n";
 
 export default function ResetPassword() {
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiUrl, setApiUrl] = useState("");
 
-  useEffect(() => {
-    setApiUrl(getApiUrl());
-  }, []);
+  useEffect(() => { setApiUrl(getApiUrl()); }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) { setError("Email is required"); return; }
+    if (!email) { setError(t("email_required")); return; }
     setError(""); setMsg(""); setLoading(true);
     try {
       const res = await fetch(`${apiUrl}/auth/forgot-password`, {
@@ -34,25 +34,23 @@ export default function ResetPassword() {
     <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "#0d1b3e" }}>
       <Paper sx={{ p: 5, maxWidth: 400, width: "100%", mx: 2 }}>
         <Typography variant="h5" fontWeight={700} textAlign="center" gutterBottom sx={{ color: "#1a237e" }}>
-          Reset Password
+          {t("reset_password")}
         </Typography>
         <Typography variant="body2" color="text.secondary" textAlign="center" mb={3}>
-          Enter your email to receive a reset link.
+          {t("reset_password_desc")}
         </Typography>
-
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {msg && <Alert severity="success" sx={{ mb: 2 }}>{msg}</Alert>}
-
         <form onSubmit={handleSubmit}>
-          <TextField fullWidth label="Email" type="email" value={email}
+          <TextField fullWidth label={t("email")} type="email" value={email}
             onChange={(e) => setEmail(e.target.value)} sx={{ mb: 2 }} />
           <Button type="submit" variant="contained" fullWidth size="large" disabled={loading}
             sx={{ bgcolor: "#0d1b3e", py: 1.5 }}>
-            {loading ? "Sending..." : "Send Reset Link"}
+            {loading ? t("sending") : t("send_reset_link")}
           </Button>
         </form>
         <Typography variant="caption" textAlign="center" display="block" mt={2}>
-          <a href="/login" style={{ color: "#1a237e" }}>Back to Login</a>
+          <a href="/login" style={{ color: "#1a237e" }}>{t("back_to_login")}</a>
         </Typography>
       </Paper>
     </Box>

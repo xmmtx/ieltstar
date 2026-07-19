@@ -26,19 +26,19 @@ const seed = async () => {
   // Create roles
   const adminRole = await Role.create({
     name: "admin",
-    description: "Super administrator with full access",
+    description: "Super administrator / 超级管理员",
     permissions: ["admin.all", "exams.read", "exams.write", "users.manage", "settings.manage"],
   });
 
   await Role.create({
     name: "teacher",
-    description: "Teacher with exam management access",
-    permissions: ["exams.read", "exams.write"],
+    description: "Teacher / 教师",
+    permissions: ["exams.read", "exams.write", "review.write"],
   });
 
   await Role.create({
     name: "student",
-    description: "Student with exam access only",
+    description: "Student / 学生",
     permissions: ["exams.read"],
   });
 
@@ -53,12 +53,12 @@ const seed = async () => {
       passwordHash: hash,
       fullName: "Super Admin",
       emailVerifiedAt: new Date(),
-      roles: [adminRole._id],
+      role: adminRole._id,
     });
     console.log("Super admin created: admin@gmail.com / admin123");
   } else {
-    // Update existing admin with roles
-    existingAdmin.roles = [adminRole._id];
+    // Update existing admin with role
+    existingAdmin.role = adminRole._id;
     existingAdmin.emailVerifiedAt = new Date();
     await existingAdmin.save();
     console.log("Existing admin updated with roles");

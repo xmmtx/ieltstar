@@ -7,8 +7,10 @@ import {
 } from "@mui/material";
 import { Refresh, RateReview } from "@mui/icons-material";
 import { getApiUrl } from "../../utils/api";
+import { useI18n } from "../../utils/i18n";
 
 export default function WritingReview() {
+  const { t } = useI18n();
   const [submissions, setSubmissions] = useState([]);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState("");
@@ -38,9 +40,9 @@ export default function WritingReview() {
     <>
       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
         <Typography variant="h5" sx={{ flex: 1, fontWeight: 700, color: "#1a237e" }}>
-          Writing Review
+          {t("writing_review")}
         </Typography>
-        <Button startIcon={<Refresh />} variant="outlined" onClick={fetchData}>Refresh</Button>
+        <Button startIcon={<Refresh />} variant="outlined" onClick={fetchData}>{t("refresh")}</Button>
       </Box>
 
       {snack && <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSnack("")}>{snack}</Alert>}

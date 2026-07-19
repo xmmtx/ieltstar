@@ -14,6 +14,7 @@ import { useTheme } from "@emotion/react";
 import { ColorModeContext } from "../../material-ui-configs/theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LanguageSwitcher from "../Global/LanguageSwitcher";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import Avatar from "@mui/material/Avatar";
 import BasicPopover from "./Popover";
@@ -132,7 +133,7 @@ export default function DefaultTopbar({ open, handleDrawerOpen }) {
               <LightModeOutlinedIcon />
             )}
           </IconButton>
-       
+          <LanguageSwitcher />
           <IconButton
             size="large"
             edge="end"

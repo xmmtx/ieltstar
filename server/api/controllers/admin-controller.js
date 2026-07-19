@@ -5,19 +5,19 @@ import { setSessionTimeout } from "./auth-controller.js";
 // ============ Users ============
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().populate("roles", "name permissions").select("-passwordHash");
+    const users = await User.find().populate("role", "name permissions").select("-passwordHash");
     res.json(users);
   } catch (e) { res.status(500).json({ error: e.message }); }
 };
 
 export const updateUser = async (req, res) => {
   try {
-    const { roles, isActive, fullName } = req.body;
+    const { role, isActive, fullName } = req.body;
     const update = {};
-    if (roles !== undefined) update.roles = roles;
+    if (role !== undefined) update.role = role;
     if (isActive !== undefined) update.isActive = isActive;
     if (fullName) update.fullName = fullName;
-    const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).populate("roles", "name");
+    const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).populate("role", "name");
     res.json(user);
   } catch (e) { res.status(500).json({ error: e.message }); }
 };

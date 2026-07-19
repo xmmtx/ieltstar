@@ -3,12 +3,11 @@ services:
     image: crpi-icp3lopw4m28wge3-vpc.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar:latest
     container_name: ieltstar
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    network_mode: host
     environment:
       # MongoDB (required)
       DB_NAME: ieltstar
-      DB_URL: mongodb://host.docker.internal:27017
+      DB_URL: mongodb://127.0.0.1:27017
       DB_USER: "ieltstar"
       DB_PASS: "zzajA5sXPj5CthRW"
       # Optional: SendGrid email
@@ -20,5 +19,3 @@ services:
       # AUTH0_ISSUER_BASE_URL: https://your-tenant.auth0.com
       # AUTH0_CLIENT_ID: your-client-id
       # AUTH0_CLIENT_SECRET: your-client-secret
-    extra_hosts:
-      - "host.docker.internal:host-gateway"

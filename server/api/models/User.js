@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     emailVerifiedAt: { type: Date, default: null },
-    roles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Role" }],
+    role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", default: null },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },

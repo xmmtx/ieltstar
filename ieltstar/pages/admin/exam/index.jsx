@@ -19,8 +19,10 @@ import ArtTrackIcon from "@mui/icons-material/ArtTrack";
 import Tooltip from '@mui/material/Tooltip';
 import { useRouter } from "next/router";
 import { getApiUrl } from "../../../utils/api";
+import { useI18n } from "../../../utils/i18n";
 
 const exam = () => {
+  const { t } = useI18n();
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -49,10 +51,10 @@ const exam = () => {
         <Table sx={{ minWidth: 650 }} aria-label="questions crud table">
           <TableHead>
             <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell align="right">Type</TableCell>
-              <TableCell align="right">Date</TableCell>
-              <TableCell align="right">Action</TableCell>
+              <TableCell>{t("title")}</TableCell>
+              <TableCell align="right">{t("type")}</TableCell>
+              <TableCell align="right">{t("date")}</TableCell>
+              <TableCell align="right">{t("actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
