@@ -48,7 +48,7 @@ Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
 ```yaml
 services:
   backend:
-    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest
+    image: xmmtx/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -63,7 +63,7 @@ services:
       - ieltstar
 
   frontend:
-    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest
+    image: xmmtx/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:

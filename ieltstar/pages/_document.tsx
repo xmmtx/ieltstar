@@ -15,6 +15,9 @@ export default class MyDocument extends Document {
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
+          <script dangerouslySetInnerHTML={{
+            __html: `window.__API_URL = "${(this.props as any).apiUrl || ""}";`,
+          }} />
           <Main />
           <NextScript />
         </body>
@@ -79,5 +82,6 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     emotionStyleTags,
+    apiUrl: process.env.API_URL || "",
   };
 };

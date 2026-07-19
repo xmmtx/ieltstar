@@ -50,7 +50,7 @@ docker exec ieltstar-api node seed-roles.js
 ```yaml
 services:
   backend:
-    image: crpi-icp3lopw4m28wge3-vpc.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-api:latest
+    image: crpi-icp3lopw4m28wge3.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -65,7 +65,7 @@ services:
       - ieltstar
 
   frontend:
-    image: crpi-icp3lopw4m28wge3-vpc.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-web:latest
+    image: crpi-icp3lopw4m28wge3.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:
