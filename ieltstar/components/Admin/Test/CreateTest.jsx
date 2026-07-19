@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
 import dynamic from "next/dynamic";
 import "suneditor/dist/css/suneditor.min.css";
+import { getApiUrl } from "../../../utils/api";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -37,7 +38,7 @@ const CreateExam = ({ id, data, setData }) => {
     setLoading(true);
 
     axios
-      .post(`${process.env.API_URL}/tests`, {
+      .post(`${getApiUrl()}/tests`, {
         ...createFormData,
         examId: id,
       })

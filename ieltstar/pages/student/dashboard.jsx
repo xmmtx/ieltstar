@@ -10,8 +10,9 @@ import TestTimeline from "../../components/Student/Dashboard/TestTimeline";
 import SuggestedStudyMaterial from "../../components/Student/Dashboard/SuggestedStudyMaterial";
 import BoltIcon from "@mui/icons-material/Bolt";
 import Box from "@mui/material/Box";
+import { getApiUrl } from "../../utils/api";
 
-const API = process.env.API_URL || "http://localhost:8080";
+const API = getApiUrl();
 
 const getUser = () => {
   try { return JSON.parse(localStorage.getItem("ieltstar_user") || "{}"); }

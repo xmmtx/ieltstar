@@ -26,6 +26,7 @@ import WritingIcon from "@mui/icons-material/Description";
 import SpeakingIcon from "@mui/icons-material/RecordVoiceOver";
 import {InlineReactionButtons} from 'sharethis-reactjs';
 import {InlineShareButtons} from 'sharethis-reactjs';
+import { getApiUrl } from "../../utils/api";
 
 function getComponent(category) {
   if (category === "Reading")
@@ -64,7 +65,7 @@ export default function ScoreBoard({ open, setOpen }) {
    */
   const getCurrentScore = (id) => {
     axios
-      .get(`${process.env.API_URL}/students/email/${user.email}`)
+      .get(`${getApiUrl()}/students/email/${user.email}`)
       .then((response) => {
         console.log("Test Data");
         const userData = response.data.testHistory;
@@ -148,7 +149,7 @@ export default function ScoreBoard({ open, setOpen }) {
   const sendEmail = (user, scores) => {
     if (user) {
       axios
-        .post(`${process.env.API_URL}/email/${user.email}`, {
+        .post(`${getApiUrl()}/email/${user.email}`, {
           email: user.email,
           name: user.given_name || user.nickname,
           picture: user.picture,

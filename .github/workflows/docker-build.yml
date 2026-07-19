@@ -42,5 +42,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-web:latest
             ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar-web:latest
-          build-args: |
-            API_URL=${{ secrets.API_URL }}

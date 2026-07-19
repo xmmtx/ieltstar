@@ -3,12 +3,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
+import { getApiUrl } from "../../../utils/api";
 
 const DeleteQuestion = ({ id, testId, data, setData}) => {
   const dispatch = useDispatch();
   const handleDelete = (id) => {
     axios
-      .delete(`${process.env.API_URL}/tests/${testId}/questions/${id}`)
+      .delete(`${getApiUrl()}/tests/${testId}/questions/${id}`)
       .then((res) => {
         setData(data.filter((item) => item._id !== id));
         dispatch(

@@ -17,6 +17,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
+import { getApiUrl } from "../../../utils/api";
 
 const CreateExam = ({ id, data, setData }) => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const CreateExam = ({ id, data, setData }) => {
     setLoading(true);
 
     axios
-      .post(`${process.env.API_URL}/tests/${id}/questions`, createFormData)
+      .post(`${getApiUrl()}/tests/${id}/questions`, createFormData)
       .then((res) => {
         setCreateFormData({
           title: "",

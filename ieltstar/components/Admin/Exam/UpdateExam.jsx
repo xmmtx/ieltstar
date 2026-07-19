@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
+import { getApiUrl } from "../../../utils/api";
 
 const UpdateExam = ({ id, data, setData }) => {
   const [open, setOpen] = useState(false);
@@ -37,7 +38,7 @@ const UpdateExam = ({ id, data, setData }) => {
   const updateData = () => {
     setLoading(true);
     const res = axios
-      .put(`${process.env.API_URL}/exams/${editFormData._id}`, {
+      .put(`${getApiUrl()}/exams/${editFormData._id}`, {
         ...editFormData,
         date: new Date(editFormData.date),
       })

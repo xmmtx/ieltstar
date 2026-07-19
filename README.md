@@ -102,7 +102,6 @@ This repo auto-builds Docker images on push to `main` via GitHub Actions, pushin
 | `ACR_NAMESPACE` | ACR namespace, e.g. `ieltstar` |
 | `ACR_USERNAME` | Alibaba Cloud account |
 | `ACR_PASSWORD` | ACR password (Container Registry → Access Credentials) |
-| `API_URL` | Backend URL for frontend build, e.g. `http://your-server:8080` |
 
 ### Setup CI/CD
 
@@ -115,7 +114,8 @@ This repo auto-builds Docker images on push to `main` via GitHub Actions, pushin
 ### Server deploy
 
 ```bash
-# docker-compose.yml already uses pre-built images
+# 1. Edit compose.yaml and set API_URL to your backend address
+# 2. Start
 docker compose up -d
 docker exec ieltstar-api node seed.js
 docker exec ieltstar-api node seed-roles.js

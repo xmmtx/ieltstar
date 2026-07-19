@@ -6,8 +6,9 @@ import {
   Chip, Select, MenuItem, FormControl, InputLabel, Typography, Box, Switch, Alert, TextField, Divider,
 } from "@mui/material";
 import { Add, Edit, Delete, Shield, Refresh, Settings } from "@mui/icons-material";
+import { getApiUrl } from "../../../utils/api";
 
-const API = process.env.API_URL || "http://localhost:8080";
+const API = getApiUrl();
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Tabs, Tab } from "@mui/material";
+import { getApiUrl } from "../utils/api";
 
-const API = process.env.API_URL || "http://localhost:8080";
 const BUILD_TIME = process.env.BUILD_TIME || "dev";
 
 export default function Login() {
@@ -19,7 +19,7 @@ export default function Login() {
     setLoading(true); setError("");
 
     try {
-      const res = await fetch(`${API}/auth/login`, {
+      const res = await fetch(`${getApiUrl()}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -41,7 +41,7 @@ export default function Login() {
     setLoading(true); setError(""); setSuccess("");
 
     try {
-      const res = await fetch(`${API}/auth/register`, {
+      const res = await fetch(`${getApiUrl()}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, fullName }),
@@ -96,7 +96,9 @@ export default function Login() {
         </Typography>
 
         <Typography variant="caption" sx={{ color: "#aaa", textAlign: "center", display: "block", mt: 1 }}>
-          v{BUILD_TIME}
+          build: {BUILD_TIME}
+          <br />
+          api: {getApiUrl()}
         </Typography>
       </Paper>
     </Box>

@@ -1,6 +1,7 @@
 // Live demo page - fetches from real API with mock fallback
 import { ExamLayout } from "../components/TestComponents/ExamV2";
 import { useEffect, useState } from "react";
+import { getApiUrl } from "../utils/api";
 
 export default function TestExam() {
   const [exams, setExams] = useState([]);
@@ -8,7 +9,7 @@ export default function TestExam() {
   const examId = "6a58ab61506742326baddc8a";
 
   useEffect(() => {
-    const API_URL = process.env.API_URL || "http://localhost:8080";
+    const API_URL = getApiUrl();
     fetch(`${API_URL}/exams/${examId}/tests`)
       .then((r) => r.json())
       .then((data) => {

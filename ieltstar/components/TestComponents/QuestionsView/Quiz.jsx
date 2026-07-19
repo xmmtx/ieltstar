@@ -10,6 +10,7 @@ import Alert from "@mui/material/Alert";
 import axios from "axios";
 import styles from "../../../styles/quizstyles/QuestionView.module.scss";
 import paragraphStyles from "../../../styles/quizstyles/Paragraph.module.scss";
+import { getApiUrl } from "../../../utils/api";
 
 let quiz_instructions = "";
 let parsedQuestionSource = "";
@@ -160,7 +161,7 @@ Your browser does not support the audio element.
 
     //Calculates score for reading & listening
    if(this.props.test.category === "Listening" || this.props.test.category === "Reading"){
-    axios.post(`${process.env.API_URL}/students/${this.props.user}/testHistory`, {
+    axios.post(`${getApiUrl()}/students/${this.props.user}/testHistory`, {
       testType: this.props.test.category,
       testId: this.props.test._id,
       section: this.props.test.section,
@@ -172,7 +173,7 @@ Your browser does not support the audio element.
     })
    }
    else if(this.props.test.category === "Writing" || this.props.test.category === "Speaking"){
-    axios.post(`${process.env.API_URL}/students/${this.props.user}/testHistory`, {
+    axios.post(`${getApiUrl()}/students/${this.props.user}/testHistory`, {
       testType: this.props.test.category,
       testId: this.props.test._id,
       section: this.props.test.section,

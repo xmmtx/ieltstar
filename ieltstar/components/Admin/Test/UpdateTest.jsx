@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
 import dynamic from "next/dynamic";
 import "suneditor/dist/css/suneditor.min.css";
+import { getApiUrl } from "../../../utils/api";
 
 const SunEditor = dynamic(() => import("suneditor-react"), {
   ssr: false,
@@ -43,7 +44,7 @@ const UpdateTest = ({ id, data, setData }) => {
   const updateData = () => {
     setLoading(true);
     axios
-      .put(`${process.env.API_URL}/tests/${editFormData._id}`, editFormData)
+      .put(`${getApiUrl()}/tests/${editFormData._id}`, editFormData)
       .then((res) => {
         setData(
           data.map((item) =>

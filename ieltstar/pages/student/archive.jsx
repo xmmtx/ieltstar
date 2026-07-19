@@ -1,6 +1,7 @@
 import { Container, Grid, Typography } from "@mui/material";
 import { useEffect } from "react";
 import axios from "axios";
+import { getApiUrl } from "../../utils/api";
 import { useState } from "react";
 import ExamCard from "../../components/Student/Archive/ExamCard";
 import AOS from "aos";
@@ -15,8 +16,8 @@ const archive = () => {
       once: true,
     });
     let endpoints = [
-      `${process.env.API_URL}/exams`,
-      `${process.env.API_URL}/tests`,
+      `${getApiUrl()}/exams`,
+      `${getApiUrl()}/tests`,
     ];
     axios.all(endpoints.map((endpoint) => axios.get(endpoint))).then((data) => {
       const exams = data[0].data.sort(

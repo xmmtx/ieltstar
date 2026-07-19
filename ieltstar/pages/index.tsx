@@ -2,6 +2,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import axios from "axios";
+import { getApiUrl } from "../utils/api";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -25,10 +26,10 @@ const Home = () => {
     if (user.email === "admin@gmail.com") {
       router.push("/admin/exam");
     } else {
-      axios.get(`${process.env.API_URL}/students/email/${user.email}`)
+      axios.get(`${getApiUrl()}/students/email/${user.email}`)
         .then((res) => {
           if (res.data === null) {
-            axios.post(`${process.env.API_URL}/students`, {
+            axios.post(`${getApiUrl()}/students`, {
               email: user.email, name: user.name, profileURL: user.picture,
             }).then(() => router.push("/student/dashboard"));
           } else {

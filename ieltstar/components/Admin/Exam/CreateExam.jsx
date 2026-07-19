@@ -16,6 +16,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../store/snackbarSlice";
+import { getApiUrl } from "../../../utils/api";
 
 const CreateExam = ({ data, setData }) => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const CreateExam = ({ data, setData }) => {
   const createData = () => {
     setLoading(true);
     axios
-      .post(`${process.env.API_URL}/exams`, {
+      .post(`${getApiUrl()}/exams`, {
         ...createFormData,
         date: new Date(createFormData.date),
       })

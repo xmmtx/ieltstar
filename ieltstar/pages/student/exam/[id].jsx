@@ -2,6 +2,7 @@ import { ExamLayout } from "../../../components/TestComponents/ExamV2";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { getApiUrl } from "../../../utils/api";
 
 export default function exam() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function exam() {
       return;
     } else {
       axios
-        .get(`${process.env.API_URL}/exams/${id}/tests`)
+        .get(`${getApiUrl()}/exams/${id}/tests`)
         .then((res) => {
           //test order - Listening, Reading, Writing, Speaking
           let data = res.data;

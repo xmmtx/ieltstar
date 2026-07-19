@@ -17,6 +17,7 @@ import ArtTrackIcon from "@mui/icons-material/ArtTrack";
 import Tooltip from "@mui/material/Tooltip";
 import UpdateQuestion from "../../../../components/Admin/Question/UpdateQuestion";
 import DeleteQuestion from "../../../../components/Admin/Question/DeleteQuestion";
+import { getApiUrl } from "../../../../utils/api";
 
 const question = () => {
   const router = useRouter();
@@ -41,7 +42,7 @@ const question = () => {
       return;
     } else {
       axios
-        .get(`${process.env.API_URL}/tests/${router.query.id}/`)
+        .get(`${getApiUrl()}/tests/${router.query.id}/`)
         .then((response) => {
           console.log(response.data.questions);
           setData(response.data.questions);

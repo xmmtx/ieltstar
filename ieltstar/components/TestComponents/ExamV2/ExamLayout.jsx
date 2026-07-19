@@ -13,7 +13,7 @@ const CATEGORY_DURATIONS = {
   Speaking: 15,
 };
 
-const API_BASE = process.env.API_URL || "http://localhost:8080";
+import { getApiUrl } from "../../../utils/api";
 
 const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "", onFinish }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -69,7 +69,7 @@ const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "
         allScores[test.category] = calculateScore(test, answers);
         // Submit to backend
         try {
-          await fetch(`${API_BASE}/students/${studentEmail}/testHistory`, {
+          await fetch(`${getApiUrl()}/students/${studentEmail}/testHistory`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -91,7 +91,7 @@ const ExamLayout = ({ exams = [], studentEmail = "demo@ieltstar.com", examId = "
       } else if (test.category === "Writing" || test.category === "Speaking") {
         // Subjective - save raw text
         try {
-          await fetch(`${API_BASE}/students/${studentEmail}/testHistory`, {
+          await fetch(`${getApiUrl()}/students/${studentEmail}/testHistory`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -15,6 +15,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useRouter } from "next/router";
 import IconHome from "@mui/icons-material/Home";
 import SendIcon from '@mui/icons-material/Send';
+import { getApiUrl } from "../../../utils/api";
 
 export default function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
@@ -67,7 +68,7 @@ export default function FormDialog(props) {
     if (user) {
       setLoading(true);
       axios
-        .post(`${process.env.API_URL}/sms/${phone}`, {
+        .post(`${getApiUrl()}/sms/${phone}`, {
           phonenumber: phone,
           email: user.email,
           name: user.given_name || user.nickname,

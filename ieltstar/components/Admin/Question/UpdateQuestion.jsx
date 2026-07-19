@@ -17,6 +17,7 @@ import { openSnackbar } from "../../../store/snackbarSlice";
 import Tooltip from "@mui/material/Tooltip";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { getApiUrl } from "../../../utils/api";
 
 const UpdateQuestion = ({ id, testId, data, setData }) => {
   const [open, setOpen] = useState(false);
@@ -46,7 +47,7 @@ const UpdateQuestion = ({ id, testId, data, setData }) => {
   const updateData = () => {
     setLoading(true);
     axios
-      .put(`${process.env.API_URL}/tests/${testId}/questions/${id}`, editFormData)
+      .put(`${getApiUrl()}/tests/${testId}/questions/${id}`, editFormData)
       .then((res) => {
         setData(
           data.map((item) =>

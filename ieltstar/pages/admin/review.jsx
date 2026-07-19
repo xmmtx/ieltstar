@@ -6,8 +6,7 @@ import {
   Typography, Box, TextField, Chip, Alert,
 } from "@mui/material";
 import { Refresh, RateReview } from "@mui/icons-material";
-
-const API = process.env.API_URL || "http://localhost:8080";
+import { getApiUrl } from "../../../utils/api";
 
 export default function WritingReview() {
   const [submissions, setSubmissions] = useState([]);
@@ -17,7 +16,7 @@ export default function WritingReview() {
   const token = typeof window !== "undefined" ? localStorage.getItem("ieltstar_token") : "";
 
   const fetchData = async () => {
-    const res = await fetch(`${API}/review/writing`, { headers: { Authorization: `Bearer ${token}` } });
+    const res = await fetch(`${getApiUrl()}/review/writing`, { headers: { Authorization: `Bearer ${token}` } });
     setSubmissions(await res.json());
   };
 
@@ -26,7 +25,7 @@ export default function WritingReview() {
   const submitScore = async () => {
     const num = parseFloat(score);
     if (isNaN(num) || num < 0 || num > 9) { setSnack("Score must be 0-9"); return; }
-    await fetch(`${API}/review/writing/score`, {
+    await fetch(`${getApiUrl()}/review/writing/score`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ studentEmail: selected.studentEmail, testHistoryId: selected._id, score: num }),

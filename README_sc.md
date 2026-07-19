@@ -50,7 +50,7 @@ docker exec ieltstar-api node seed-roles.js
 ```yaml
 services:
   backend:
-    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest
+    image: crpi-icp3lopw4m28wge3-vpc.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-api:latest
     container_name: ieltstar-api
     restart: unless-stopped
     ports:
@@ -65,7 +65,7 @@ services:
       - ieltstar
 
   frontend:
-    image: registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest
+    image: crpi-icp3lopw4m28wge3-vpc.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-web:latest
     container_name: ieltstar-web
     restart: unless-stopped
     ports:
@@ -104,7 +104,6 @@ networks:
 | `ACR_NAMESPACE` | ACR 命名空间，如 `ieltstar` |
 | `ACR_USERNAME` | 阿里云账号 |
 | `ACR_PASSWORD` | ACR 密码（容器镜像服务 → 访问凭证） |
-| `API_URL` | 前端构建时的后端地址，如 `http://你的服务器:8080` |
 
 ### 配置 CI/CD
 

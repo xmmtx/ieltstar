@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ArchiveIcon from "@mui/icons-material/MoveToInbox";
 import Link from "next/link";
+import { getApiUrl } from "../../utils/api";
 import { Divider, Button } from "@mui/material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
@@ -63,8 +64,7 @@ export default function BasicPopover(props) {
             <Button variant="outlined" endIcon={<ExitToAppIcon />} color="error"
               onClick={async () => {
                 const token = localStorage.getItem("ieltstar_token");
-                const API = process.env.API_URL || "http://localhost:8080";
-                await fetch(`${API}/auth/logout`, {
+                await fetch(`${getApiUrl()}/auth/logout`, {
                   method: "POST",
                   headers: { Authorization: `Bearer ${token}` },
                 });

@@ -36,7 +36,7 @@ const exam = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.API_URL}/exams`)
+      .get(`${getApiUrl()}/exams`)
       .then((response) => setData(response.data))
       .catch((err) => console.log(err));
   }, []);
