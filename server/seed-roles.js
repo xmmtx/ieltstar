@@ -15,8 +15,13 @@ const seed = async () => {
   await mongoose.connect(url.toString());
   console.log("Connected");
 
-  // Clear existing roles
-  await Role.deleteMany({});
+  // Skip if roles already exist
+  const roleCount = await Role.countDocuments();
+  if (roleCount > 0) {
+    console.log(`Roles already exist (${roleCount}), skipping seed.`);
+    await mongoose.disconnect();
+    return;
+  }
 
   // Create roles
   const adminRole = await Role.create({

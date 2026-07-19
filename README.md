@@ -29,14 +29,8 @@ A full-stack IELTS Academic mock test platform for **Listening, Reading, and Wri
 
 ```bash
 # 1. Configure compose.yaml with your MongoDB connection
-#    See compose.yaml for all options
-
-# 2. Start (single container: frontend + backend)
+# 2. Start (single container, auto-seeds database on first run)
 docker compose up -d
-
-# 3. Seed data
-docker exec ieltstar node server/seed.js
-docker exec ieltstar node server/seed-roles.js
 ```
 
 Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
@@ -85,10 +79,8 @@ This repo auto-builds a **single Docker image** on push to `main` via GitHub Act
 
 ```bash
 # 1. Edit compose.yaml → set DB_URL to your MongoDB
-# 2. Start
+# 2. Start (auto-seeds on first run)
 docker compose up -d
-docker exec ieltstar node server/seed.js
-docker exec ieltstar node server/seed-roles.js
 ```
 
 ## Dev Setup (no Docker)

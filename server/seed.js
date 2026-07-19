@@ -17,6 +17,14 @@ const seedData = async () => {
   await mongoose.connect(url.toString());
   console.log("Connected to MongoDB");
 
+  // Skip if data already exists
+  const examCount = await Exam.countDocuments();
+  if (examCount > 0) {
+    console.log(`Database already has ${examCount} exams, skipping seed.`);
+    await mongoose.disconnect();
+    return;
+  }
+
   // Clear existing data
   await Exam.deleteMany({});
   await Test.deleteMany({});

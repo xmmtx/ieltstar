@@ -31,12 +31,8 @@
 
 ```bash
 # 1. 编辑 compose.yaml → 配置 DB_URL 指向你的 MongoDB
-# 2. 启动（单容器：前后端合一）
+# 2. 启动（单容器，首次自动初始化数据库）
 docker compose up -d
-
-# 3. 初始化数据
-docker exec ieltstar node server/seed.js
-docker exec ieltstar node server/seed-roles.js
 ```
 
 打开 `http://localhost:3000` → 登录：`admin@gmail.com` / `admin123`
@@ -77,9 +73,7 @@ services:
 ### 服务器部署
 
 ```bash
-docker compose up -d
-docker exec ieltstar node server/seed.js
-docker exec ieltstar node server/seed-roles.js
+docker compose up -d    # 首次启动自动初始化数据库
 ```
 
 ## 开发环境

@@ -11,9 +11,15 @@ else
   echo "[entrypoint] Single-container mode (no API_URL)"
 fi
 
+# Auto-seed database (idempotent - skips if data exists)
+echo "[entrypoint] Checking database..."
+cd /app/server
+node seed.js
+node seed-roles.js
+
 # Start Express backend in background
 echo "[entrypoint] Starting Express API on :8080"
-cd /app/server && node server.js &
+node server.js &
 
 # Start Next.js frontend (blocking)
 echo "[entrypoint] Starting Next.js on :3000"
