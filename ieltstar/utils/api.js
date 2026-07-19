@@ -21,5 +21,3 @@ export function getApiUrl() {
 }
 
 export default getApiUrl;
-
-export default getApiUrl;
