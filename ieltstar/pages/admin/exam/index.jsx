@@ -18,6 +18,7 @@ import { IconButton } from "@mui/material";
 import ArtTrackIcon from "@mui/icons-material/ArtTrack";
 import Tooltip from '@mui/material/Tooltip';
 import { useRouter } from "next/router";
+import { getApiUrl } from "../../../utils/api";
 
 const exam = () => {
   const [data, setData] = useState([]);

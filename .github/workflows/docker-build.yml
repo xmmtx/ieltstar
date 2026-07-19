@@ -1,4 +1,4 @@
-name: Build and Push Docker Images
+name: Build and Push Docker Image
 
 on:
   push:
@@ -25,20 +25,11 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build & push backend
+      - name: Build & push
         uses: docker/build-push-action@v5
         with:
-          context: ./server
+          context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-api:latest
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar-api:latest
-
-      - name: Build & push frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./ieltstar
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar-web:latest
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ieltstar:latest
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/ieltstar:latest

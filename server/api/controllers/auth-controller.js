@@ -148,6 +148,62 @@ export const me = async (req, res) => {
   }
 };
 
+// ============ Forgot Password ============
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email is required" });
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    // Always return success to prevent email enumeration
+    if (!user) return res.json({ message: "If the email exists, a reset link has been sent." });
+
+    // Invalidate any existing reset tokens for this user
+    await Token.deleteMany({ userId: user._id, type: "password_reset" });
+
+    const token = crypto.randomBytes(32).toString("hex");
+    await Token.create({
+      userId: user._id,
+      token,
+      type: "password_reset",
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+    });
+
+    // In production, send email with reset link
+    // const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    // await sendEmail(user.email, "Password Reset", `Reset link: ${resetUrl}`);
+
+    res.json({
+      message: "If the email exists, a reset link has been sent.",
+      resetToken: token, // For dev/demo: include token in response
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+};
+
+// ============ Reset Password ============
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) return res.status(400).json({ error: "Token and new password required" });
+    if (newPassword.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+
+    const tokenDoc = await Token.findOne({ token, type: "password_reset" });
+    if (!tokenDoc || tokenDoc.expiresAt < new Date()) {
+      return res.status(400).json({ error: "Invalid or expired reset token" });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(tokenDoc.userId, { passwordHash });
+    await Token.deleteOne({ _id: tokenDoc._id });
+
+    res.json({ message: "Password reset successfully" });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+};
+
 // ============ Resend verification email ============
 export const resendVerification = async (req, res) => {
   try {

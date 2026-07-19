@@ -28,16 +28,15 @@ A full-stack IELTS Academic mock test platform for **Listening, Reading, and Wri
 ## Quick Start — Docker
 
 ```bash
-# 1. Configure MongoDB connection
-cp server/.env.example server/.env
-# Edit server/.env → DB_URL=mongodb://your-host:27017
+# 1. Configure compose.yaml with your MongoDB connection
+#    See compose.yaml for all options
 
-# 2. Start
+# 2. Start (single container: frontend + backend)
 docker compose up -d
 
 # 3. Seed data
-docker exec ieltstar-api node seed.js
-docker exec ieltstar-api node seed-roles.js
+docker exec ieltstar node server/seed.js
+docker exec ieltstar node server/seed-roles.js
 ```
 
 Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
@@ -47,50 +46,33 @@ Open `http://localhost:3000` — Login: `admin@gmail.com` / `admin123`
 
 ```yaml
 services:
-  backend:
-    image: xmmtx/ieltstar-api:latest
-    container_name: ieltstar-api
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    environment:
-      PORT: 8080
-      DB_NAME: ieltstar
-      DB_URL: mongodb://your-mongo-host:27017
-      DB_USER: ""
-      DB_PASS: ""
-    networks:
-      - ieltstar
-
-  frontend:
-    image: xmmtx/ieltstar-web:latest
-    container_name: ieltstar-web
+  ieltstar:
+    image: xmmtx/ieltstar:latest
+    container_name: ieltstar
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      API_URL: http://ielts.xm233.cn:8080
-    depends_on:
-      - backend
-    networks:
-      - ieltstar
-
-networks:
-  ieltstar:
-    driver: bridge
+      DB_NAME: ieltstar
+      DB_URL: mongodb://host.docker.internal:27017
+      DB_USER: ""
+      DB_PASS: ""
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 ```
+> 💡 **Single container**: Next.js rewrites `/api/*` to internal Express. No `API_URL` needed!
+> 
+> For external MongoDB, set `DB_URL` to your connection string. For Docker-hosted MongoDB, use service name instead of `host.docker.internal`.
 
-Replace `your-mongo-host` and `API_URL` with your actual values.
 </details>
 
 ## Deployment
 
-This repo auto-builds Docker images on push to `main` via GitHub Actions, pushing to **both** Docker Hub and Alibaba Cloud ACR.
+This repo auto-builds a **single Docker image** on push to `main` via GitHub Actions.
 
 | Image | Docker Hub | ACR (cn-hangzhou) |
 |-------|-----------|-------------------|
-| Backend API | `yourname/ieltstar-api:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest` |
-| Frontend | `yourname/ieltstar-web:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest` |
+| ieltstar | `yourname/ieltstar:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar:latest` |
 
 ### GitHub Secrets
 
@@ -98,27 +80,15 @@ This repo auto-builds Docker images on push to `main` via GitHub Actions, pushin
 |--------|-------------|
 | `DOCKERHUB_USERNAME` | Docker Hub username |
 | `DOCKERHUB_TOKEN` | Docker Hub access token |
-| `ACR_REGISTRY` | Alibaba Cloud registry, e.g. `registry.cn-shanghai.aliyuncs.com` |
-| `ACR_NAMESPACE` | ACR namespace, e.g. `ieltstar` |
-| `ACR_USERNAME` | Alibaba Cloud account |
-| `ACR_PASSWORD` | ACR password (Container Registry → Access Credentials) |
-
-### Setup CI/CD
-
-1. Fork this repo
-2. Go to **Settings → Secrets → Actions**, add:
-   - `DOCKERHUB_USERNAME`
-   - `DOCKERHUB_TOKEN`
-3. Push to `main` → images auto-built on [Docker Hub](https://hub.docker.com)
 
 ### Server deploy
 
 ```bash
-# 1. Edit compose.yaml and set API_URL to your backend address
+# 1. Edit compose.yaml → set DB_URL to your MongoDB
 # 2. Start
 docker compose up -d
-docker exec ieltstar-api node seed.js
-docker exec ieltstar-api node seed-roles.js
+docker exec ieltstar node server/seed.js
+docker exec ieltstar node server/seed-roles.js
 ```
 
 ## Dev Setup (no Docker)

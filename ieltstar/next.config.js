@@ -10,6 +10,15 @@ const nextConfig = {
   publicRuntimeConfig: {
     API_URL: process.env.API_URL || "",
   },
+  // Single-container: proxy /api/* to internal Express server
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:8080/:path*',
+      },
+    ];
+  },
   webpack: (config) => {
     const projectRoot = path.resolve(__dirname);
 

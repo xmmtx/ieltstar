@@ -30,16 +30,13 @@
 ## 快速开始 — Docker
 
 ```bash
-# 1. 配置 MongoDB
-cp server/.env.example server/.env
-# 编辑 server/.env → DB_URL=mongodb://你的MongoDB地址:27017
-
-# 2. 启动
+# 1. 编辑 compose.yaml → 配置 DB_URL 指向你的 MongoDB
+# 2. 启动（单容器：前后端合一）
 docker compose up -d
 
 # 3. 初始化数据
-docker exec ieltstar-api node seed.js
-docker exec ieltstar-api node seed-roles.js
+docker exec ieltstar node server/seed.js
+docker exec ieltstar node server/seed-roles.js
 ```
 
 打开 `http://localhost:3000` → 登录：`admin@gmail.com` / `admin123`
@@ -49,76 +46,40 @@ docker exec ieltstar-api node seed-roles.js
 
 ```yaml
 services:
-  backend:
-    image: crpi-icp3lopw4m28wge3.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-api:latest
-    container_name: ieltstar-api
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    environment:
-      PORT: 8080
-      DB_NAME: ieltstar
-      DB_URL: mongodb://你的MongoDB地址:27017
-      DB_USER: ""
-      DB_PASS: ""
-    networks:
-      - ieltstar
-
-  frontend:
-    image: crpi-icp3lopw4m28wge3.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar-web:latest
-    container_name: ieltstar-web
+  ieltstar:
+    image: crpi-icp3lopw4m28wge3.cn-shanghai.personal.cr.aliyuncs.com/xmmtx/ieltstar:latest
+    container_name: ieltstar
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      API_URL: http://你的服务器IP:8080
-    depends_on:
-      - backend
-    networks:
-      - ieltstar
-
-networks:
-  ieltstar:
-    driver: bridge
+      DB_NAME: ieltstar
+      DB_URL: mongodb://host.docker.internal:27017
+      DB_USER: ""
+      DB_PASS: ""
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 ```
+> 💡 **单容器架构**：Next.js 自动将 `/api/*` 转发到内部 Express，无需配置 `API_URL`！
+>
+> 宿主机 MongoDB 用 `host.docker.internal`；Docker 内 MongoDB 用服务名。
 
-把 `你的MongoDB地址` 和 `API_URL` 换成实际值。
 </details>
 
 ## 自动构建
 
-推送代码到 `main` 分支后，GitHub Actions 自动构建并**同时推送** Docker Hub 和阿里云 ACR：
+推送代码到 `main` 分支后，GitHub Actions 自动构建**单个镜像**并推送：
 
 | 镜像 | Docker Hub | ACR (杭州) |
 |------|-----------|-----------|
-| 后端 API | `你的用户名/ieltstar-api:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-api:latest` |
-| 前端 | `你的用户名/ieltstar-web:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar-web:latest` |
-
-### GitHub Secrets
-
-| Secret | 说明 |
-|--------|------|
-| `DOCKERHUB_USERNAME` | Docker Hub 用户名 |
-| `DOCKERHUB_TOKEN` | Docker Hub 访问令牌 |
-| `ACR_REGISTRY` | 阿里云镜像仓库地址，如 `registry.cn-shanghai.aliyuncs.com` |
-| `ACR_NAMESPACE` | ACR 命名空间，如 `ieltstar` |
-| `ACR_USERNAME` | 阿里云账号 |
-| `ACR_PASSWORD` | ACR 密码（容器镜像服务 → 访问凭证） |
-
-### 配置 CI/CD
-
-1. Fork 本仓库
-2. 在 GitHub → **Settings → Secrets → Actions** 添加：
-   - `DOCKERHUB_USERNAME`
-   - `DOCKERHUB_TOKEN`
-3. 推送代码自动触发构建
+| ieltstar | `你的用户名/ieltstar:latest` | `registry.cn-shanghai.aliyuncs.com/ieltstar/ieltstar:latest` |
 
 ### 服务器部署
 
 ```bash
 docker compose up -d
-docker exec ieltstar-api node seed.js
-docker exec ieltstar-api node seed-roles.js
+docker exec ieltstar node server/seed.js
+docker exec ieltstar node server/seed-roles.js
 ```
 
 ## 开发环境

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Tabs, Tab } from "@mui/material";
 import { getApiUrl } from "../utils/api";
 
@@ -12,6 +12,11 @@ export default function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [apiUrl, setApiUrl] = useState("");
+
+  useEffect(() => {
+    setApiUrl(getApiUrl());
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,7 +24,7 @@ export default function Login() {
     setLoading(true); setError("");
 
     try {
-      const res = await fetch(`${getApiUrl()}/auth/login`, {
+      const res = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -41,7 +46,7 @@ export default function Login() {
     setLoading(true); setError(""); setSuccess("");
 
     try {
-      const res = await fetch(`${getApiUrl()}/auth/register`, {
+      const res = await fetch(`${apiUrl}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, fullName }),
@@ -97,8 +102,12 @@ export default function Login() {
 
         <Typography variant="caption" sx={{ color: "#aaa", textAlign: "center", display: "block", mt: 1 }}>
           build: {BUILD_TIME}
-          <br />
-          api: {getApiUrl()}
+          {apiUrl && (
+            <>
+              <br />
+              api: {apiUrl}
+            </>
+          )}
         </Typography>
       </Paper>
     </Box>
@@ -106,5 +115,4 @@ export default function Login() {
 }
 
 Login.getLayout = (page) => page;
-Login.skipAuth = true;
 Login.skipAuth = true;
