@@ -15,9 +15,7 @@ export default class MyDocument extends Document {
           {(this.props as any).emotionStyleTags}
         </Head>
         <body>
-          <script dangerouslySetInnerHTML={{
-            __html: `window.__API_URL = "${(this.props as any).apiUrl || ""}";`,
-          }} />
+          <script src="/__env.js" />
           <Main />
           <NextScript />
         </body>
@@ -82,7 +80,5 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     emotionStyleTags,
-    // Bracket notation bypasses webpack's DefinePlugin replacement
-    apiUrl: process.env['API_URL'] || "",
   };
 };
