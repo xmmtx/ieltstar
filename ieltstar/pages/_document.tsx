@@ -82,6 +82,7 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     emotionStyleTags,
-    apiUrl: process.env.API_URL || "",
+    // Bracket notation bypasses webpack's DefinePlugin replacement
+    apiUrl: process.env['API_URL'] || "",
   };
 };

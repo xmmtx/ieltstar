@@ -9,9 +9,9 @@ export function getApiUrl() {
     return _apiUrl;
   }
 
-  // 2. Server-side: read directly from process.env
-  if (typeof window === "undefined" && process.env.API_URL) {
-    _apiUrl = process.env.API_URL;
+  // 2. Server-side: read directly from process.env (bracket notation bypasses webpack)
+  if (typeof window === "undefined" && typeof process !== "undefined" && process.env["API_URL"]) {
+    _apiUrl = process.env["API_URL"];
     return _apiUrl;
   }
 
