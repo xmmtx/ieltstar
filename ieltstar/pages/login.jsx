@@ -38,11 +38,7 @@ export default function Login() {
       localStorage.setItem("ieltstar_token", data.token);
       localStorage.setItem("ieltstar_user", JSON.stringify(data.user));
       // Role-based redirect
-      if (data.user.role === "admin" || data.user.role === "teacher") {
-        window.location.href = "/admin/exam";
-      } else {
-        window.location.href = "/student/dashboard";
-      }
+      window.location.href = "/dashboard";
     } catch (e) {
       setError(e.message);
     } finally { setLoading(false); }

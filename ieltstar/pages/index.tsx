@@ -26,11 +26,7 @@ const Home = () => {
       })
         .then((r) => r.json())
         .then((user) => {
-          if (user.role === "admin" || user.role === "teacher") {
-            router.replace("/admin/exam");
-          } else {
-            router.replace("/student/dashboard");
-          }
+          router.replace("/dashboard");
         })
         .catch(() => setChecking(false));
     } else {

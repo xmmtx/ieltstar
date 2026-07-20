@@ -79,7 +79,7 @@ const DefaultDrawer = ({ open, handleDrawerClose }) => {
       </DrawerHeader>
       <Divider />
       <List>
-        <ListItem button component={Link} href="/student/dashboard" selected={selected == 'dashboard'} onClick={() => setSelected('dashboard')}>
+        <ListItem button component={Link} href="/dashboard" selected={selected == 'dashboard'} onClick={() => setSelected('dashboard')}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>

@@ -23,10 +23,14 @@ const nextConfig = {
     const projectRoot = path.resolve(__dirname);
 
     // Fix duplicate React on Windows due to case-insensitive paths (D:\ vs d:\)
+    // Force all React imports to resolve to the same capitalization
+    const drive = projectRoot.charAt(0).toUpperCase();
+    const rest = projectRoot.slice(1);
+    const normalized = drive + rest;
     config.resolve.alias = {
       ...config.resolve.alias,
-      react: path.join(projectRoot, 'node_modules', 'react'),
-      'react-dom': path.join(projectRoot, 'node_modules', 'react-dom'),
+      react: path.join(normalized, 'node_modules', 'react'),
+      'react-dom': path.join(normalized, 'node_modules', 'react-dom'),
     };
 
     // Normalize all module paths to uppercase drive letter on Windows
